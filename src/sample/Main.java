@@ -34,7 +34,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         //primaryStage.setResizable(false);
         primaryStage.show();
-        primaryStage.setOnHiding( event -> {Runtime.getRuntime().exit(0);;} );//Ends all processes of application on stage close
+        primaryStage.setOnHiding( event -> {Runtime.getRuntime().exit(0);} );//Ends all processes of application on stage close
         root.getChildren().add(SHAGGY);
 
 
@@ -113,6 +113,8 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+        connect();
+        createTable();
     }
 
 

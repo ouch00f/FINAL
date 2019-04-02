@@ -25,12 +25,11 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-
-
         Group root = new Group();
 
         primaryStage.setTitle("");
         Scene scene = new Scene(root, 800, 450);
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         //primaryStage.setResizable(false);
         primaryStage.show();
@@ -97,7 +96,6 @@ public class Main extends Application {
 
     public void checkConditions(){//continuously checks conditions on the tick of a timer
 
-
         if(SHAGGY.isRunningRight()){
             SHAGGY.setLayoutX(SHAGGY.getLayoutX()+SHAGGY.getSpeed());
         }
@@ -106,7 +104,7 @@ public class Main extends Application {
             SHAGGY.setLayoutX(SHAGGY.getLayoutX()-SHAGGY.getSpeed());
         }
 
-        if(SHAGGY.isFalling() && SHAGGY.getLayoutX() == ground){
+        if(SHAGGY.isFalling() && SHAGGY.getLayoutY() == ground){
             SHAGGY.land();
         }
     }
@@ -128,7 +126,7 @@ public class Main extends Application {
         Connection conn = null;
         try {
 
-            //String url = "jdbc:sqlite:/Users/rain/Desktop/Squidward_VS_Shaggy/master.db";
+            //String url = "jdbc:sqlite:/Users/rain/Desktop/Squidward_VS_Shaggy/master.db";;
 
             conn = DriverManager.getConnection(url);
 

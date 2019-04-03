@@ -12,14 +12,18 @@ public class Squidward extends Character {
         this.setHeight(10);
         this.standLeft();
 
-        standingRight = new javafx.scene.image.Image("squidward_idle_right.png");
-        standingLeft = new javafx.scene.image.Image("squidward_idle_left.png");
-        runningRight = new javafx.scene.image.Image("squidward_move_right.png");
-        runningLeft = new javafx.scene.image.Image("squidward_move_left.png");
-        jumpingLeft = new javafx.scene.image.Image("squidward_jump_left.png");
-        jumpingRight = new javafx.scene.image.Image("squidward_jump_right.png");
-        attackingLeft = new javafx.scene.image.Image("squidward_attack_left.png");
+        standingRight = new Image("squidward_idle_right.png");
+        standingLeft =  new Image("squidward_idle_left.png");
+        runningRight =  new Image("squidward_move_right.png");
+        runningLeft =  new Image("squidward_move_left.png");
+        jumpingLeft =  new Image("squidward_jump_left.png");
+        jumpingRight =  new Image("squidward_jump_right.png");
+        attackingLeft = new Image("squidward_attack_left.png");
         attackingRight = new Image("squidward_attack_right.png");
+        blockingLeft = new Image("squidward_blocking_left.png");
+        blockingRight = new Image ("squidward_blocking_right.png");
+        damagedLeft = new Image ("squidward_damaged_left.png");
+        damagedRight = new Image ("squidward_damaged_right.png");
 
     }
 }

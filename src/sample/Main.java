@@ -78,6 +78,11 @@ public class Main extends Application {
             case S:
                 SHAGGY.block();
                 SHAGGY.setBlocking(true);
+
+//                // just to fix image scaling (REMOVE AFTER SPRITES ARE SUBMITTED FROM CHARAN.)
+//                SHAGGY.setLayoutY(340);
+//                //
+
                 break;
 
 
@@ -120,6 +125,11 @@ public class Main extends Application {
                     SHAGGY.standRight();
                 }
                 SHAGGY.setBlocking(false);
+
+//                 ONLY FOR SPRITE IMAGE SCALING PROBLEM (REMOVE WHEN CHARAN SUBMITS SPRITES.)
+//                SHAGGY.setLayoutY(ground);
+
+
                 break;
 
             case D:

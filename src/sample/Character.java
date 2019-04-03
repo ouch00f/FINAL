@@ -16,8 +16,7 @@ public abstract class Character extends HBox {
     protected int dmgAmount;
     protected int atkRange = 5;
 
-
-    protected Image standingRight, standingLeft, runningRight, runningLeft,jumpingRight,jumpingLeft, attackingLeft, attackingRight;
+    protected Image standingRight, standingLeft, runningRight, runningLeft,jumpingRight,jumpingLeft, attackingLeft, attackingRight, blockingLeft, blockingRight, damagedLeft, damagedRight;
     protected Image currentImage;//place holder such that images are not loaded continuously: Currently being tested to see if it's faster than loading continuously
     ImageView characterImage;
 
@@ -27,21 +26,6 @@ public abstract class Character extends HBox {
         this.setLayoutY(initialY);
         this.setSpeed(startingSpeed);
         this.setJumpConstant(startingJumpConstant);
-
-
-
-
-
-//        //Movement Images (these are arrows for the abstract character, but subclasses will overwrite the following Images)
-//        standingRight = new Image("shaggy_idle_right.png");
-//        standingLeft = new Image("shaggy_idle_left.png");
-//        runningRight = new Image("shaggy_move_right.png");
-//        runningLeft = new Image("shaggy_move_left.png");
-//        jumpingLeft = new Image("shaggy_jump_left.png");
-//        jumpingRight = new Image("shaggy_jump_right.png");
-//        attackingLeft = new Image("shaggy_attack_left.png");
-//        attackingRight = new Image("shaggy_attack_right.png");
-
 
         characterImage = new ImageView(jumpingLeft);
         this.getChildren().add(characterImage);
@@ -64,7 +48,7 @@ public abstract class Character extends HBox {
         this.isRunningLeft = false;
 
         if(!this.isFalling){
-            if(this.differentImage(this.standingRight) ) {
+            if(this.differentImage(this.standingRight)) {
                 this.setImage(standingRight);
             }
         }else{
@@ -165,14 +149,24 @@ public abstract class Character extends HBox {
 
 
     // [Attacks]--------------------------------------------------------------------------------------------------------
-    //Hey Sandy, I simplified some of the attack methods if you are ok with that
+    // Hey Sandy, I simplified some of the attack methods if you are ok with that
     public void attack(Character opponent){
-        if(this.isTouching(opponent)) {//when the characters are touching
-            opponent.setHealth(opponent.getHealth() - this.damage); //deals damage to opponent by making their health smaller
+        if(this.isTouching(opponent) && opponent.isBlocking) {
+            System.out.println("Attack Blocked!");
+        } else if(this.isTouching(opponent) && !opponent.isBlocking){
+            opponent.setHealth(opponent.getHealth() - this.damage);
+
+            // changes the opponent's character when damaged.
+            // need to implement a timer where it changes back, thinking of a method for that hmm.
+            if(opponent.facingRight || opponent.isRunningRight){
+                opponent.setImage(opponent.damagedRight);
+            } else{
+                opponent.setImage(opponent.damagedLeft);
+            }
         }
 
         //loading the attack animation
-        if (facingRight) {
+        if (facingRight || isRunningRight) {
             this.setImage(attackingRight);
         } else{
             this.setImage(attackingLeft);
@@ -182,6 +176,21 @@ public abstract class Character extends HBox {
     public boolean isTouching( Character p2){//used to determine whether or not the characters are touching on the stage
         return (Math.abs(this.getLayoutX() -p2.getLayoutX())* 2 < (this.getWidth() + p2.getWidth())) && (Math.abs(this.getLayoutY() - p2.getLayoutY())*2<(this.getHeight()+p2.getHeight()));
     }
+
+
+    public void block(){
+        if (facingRight || isRunningRight){
+            this.setImage(blockingRight);
+        } else if (!facingRight || isRunningLeft){
+            this.setImage(blockingLeft);
+        }
+    }
+
+
+
+
+
+
 
     // takeHit where if inreach is within range and is not blocking than decrease opponent hp
     /*public void takeHit(double pos1, double pos2){

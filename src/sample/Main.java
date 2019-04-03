@@ -72,8 +72,12 @@ public class Main extends Application {
                 SHAGGY.attack(SQUIDWARD);
                 //SHAGGY.attack(SQUIDWARD, SHAGGY.getLayoutX(), SQUIDWARD.getLayoutX());
                 break;
-            case S:
+            case W:
                 SHAGGY.jumpVariable = SHAGGY.jumpVariable/2;
+                break;
+            case S:
+                SHAGGY.block();
+                SHAGGY.setBlocking(true);
                 break;
 
 
@@ -86,21 +90,38 @@ public class Main extends Application {
                 break;
             case P:
                 SQUIDWARD.attack(SHAGGY);
+                break;
                 //SQUIDWARD.attack(SHAGGY,SQUIDWARD.getLayoutX(), SHAGGY.getLayoutX());
-            case K:
+            case I:
                 SQUIDWARD.jumpVariable = SQUIDWARD.jumpVariable/2;
+                break;
+            case K:
+                SQUIDWARD.block();
+                SQUIDWARD.setBlocking(true);
+                break;
         }
-       /*  System.out.println("Shaggy Position(X):"+SHAGGY.getLayoutX());
+       // System.out.println("Shaggy Position(X):"+SHAGGY.getLayoutX());
         System.out.println("Shaggy Health:"+SHAGGY.getHealth());
-*/
+
     }
 
     public void keyRelease(KeyCode keycode){//when keys are released
 
         switch (keycode){
+            // SHAGGY's
             case W:
                 SHAGGY.jump();
                 break;
+
+            case S:
+                if (!SHAGGY.getFacingRight()){
+                    SHAGGY.standLeft();
+                } else{
+                    SHAGGY.standRight();
+                }
+                SHAGGY.setBlocking(false);
+                break;
+
             case D:
                 SHAGGY.standRight();
                 break;
@@ -116,14 +137,27 @@ public class Main extends Application {
                     SHAGGY.standRight();
                 }
                 break;
+
+                // SQUIDWARD's
             case I:
                 SQUIDWARD.jump();
                 break;
+
             case L:
                 SQUIDWARD.standRight();
                 break;
+
             case J:
                 SQUIDWARD.standLeft();
+                break;
+
+            case K:
+                if (!SQUIDWARD.getFacingRight()){
+                    SQUIDWARD.standLeft();
+                } else {
+                    SQUIDWARD.standRight();
+                }
+                SQUIDWARD.setBlocking(false);
                 break;
 
             // Upon attacking, this key release will set the image for squidward position depending on where he faces.
@@ -141,7 +175,11 @@ public class Main extends Application {
 
 
     public void checkConditions(Character player){//continuously checks conditions on the tick of a timer
-        System.out.println("The characters are touching: "+ SHAGGY.isTouching(SQUIDWARD));//////////////////////////////////////////////////////////////////////////////////////////this is spamming the sout fyi
+//        //////////////////////message
+//        if (SHAGGY.isTouching(SQUIDWARD)) {
+//            System.out.println("The characters are touching: " + SHAGGY.isTouching(SQUIDWARD));
+//        }
+
 
         if(player.isRunningRight()){
             player.setLayoutX(player.getLayoutX()+player.getSpeed());

@@ -15,8 +15,12 @@ import java.util.TimerTask;
 public class Main extends Application {
 
     int ground = 300;
-    Squidward SQUIDWARD = new Squidward(1000, ground);
-    public Shaggy SHAGGY = new Shaggy(25, ground);
+
+    // Character/object instantiation
+    Squidward SQUIDWARD = new Squidward(675, ground);
+    Shaggy SHAGGY = new Shaggy(25, ground);
+
+
     KeyCode previousKeycode;
     Timer clock = new Timer();
 
@@ -36,6 +40,7 @@ public class Main extends Application {
         primaryStage.show();
         primaryStage.setOnHiding( event -> {Runtime.getRuntime().exit(0);} );//Ends all processes of application on stage close
         root.getChildren().add(SHAGGY);
+        root.getChildren().add(SQUIDWARD);
 
 
         //Key event filters
@@ -65,6 +70,8 @@ public class Main extends Application {
     public void keyPress(KeyCode keycode){//when keys are pressed
 
         switch(keycode){
+
+                // SHAGGY CONTROLS
             case W:
                 SHAGGY.jump();
                 break;
@@ -74,8 +81,25 @@ public class Main extends Application {
             case A:
                 SHAGGY.runLeft();
                 break;
+            case C:
+                SHAGGY.attack(SQUIDWARD, SHAGGY.getLayoutX(), SQUIDWARD.getLayoutX());
+                break;
+
+                // SQUIDWARD CONTROLS
+            case I:
+                SQUIDWARD.jump();
+                break;
+            case L:
+                SQUIDWARD.runRight();
+                break;
+            case J:
+                SQUIDWARD.runLeft();
+                break;
+            case P:
+                SQUIDWARD.attack(SHAGGY,SQUIDWARD.getLayoutX(), SHAGGY.getLayoutX());
         }
-        // System.out.println(SHAGGY.getLayoutX());
+         System.out.println("Shaggy Position(X):"+SHAGGY.getLayoutX());
+        System.out.println("Shaggy Health:"+SHAGGY.getHealth());
 
     }
 
@@ -91,11 +115,39 @@ public class Main extends Application {
             case W:
                 SHAGGY.setFalling(true);
                 break;
+            case C:
+                // Upon attacking, this key release will set the image for shaggy position depending on where he faces.
+                if (SHAGGY.isRunningLeft || SHAGGY.facingRight== false){
+                    SHAGGY.standLeft();
+                } else {
+                    SHAGGY.standRight();
+                }
+                break;
+
+            case L:
+                SQUIDWARD.standRight();
+                break;
+            case J:
+                SQUIDWARD.standLeft();
+                break;
+            case I:
+                SQUIDWARD.setFalling(true);
+                break;
+            // Upon attacking, this key release will set the image for squidward position depending on where he faces.
+            case P:
+                if (SQUIDWARD.isRunningLeft || SQUIDWARD.facingRight == false){
+                    SQUIDWARD.standLeft();
+                } else {
+                    SQUIDWARD.standRight();
+                }
+                break;
         }
     }
 
+
     public void checkConditions(){//continuously checks conditions on the tick of a timer
 
+        // SHAGGY
         if(SHAGGY.isRunningRight()){
             SHAGGY.setLayoutX(SHAGGY.getLayoutX()+SHAGGY.getSpeed());
         }
@@ -106,6 +158,19 @@ public class Main extends Application {
 
         if(SHAGGY.isFalling() && SHAGGY.getLayoutY() == ground){
             SHAGGY.land();
+        }
+
+        // SQUIDWARD
+        if(SQUIDWARD.isRunningRight()){
+            SQUIDWARD.setLayoutX(SQUIDWARD.getLayoutX()+SQUIDWARD.getSpeed());
+        }
+
+        if(SQUIDWARD.isRunningLeft()){
+            SQUIDWARD.setLayoutX(SQUIDWARD.getLayoutX()-SQUIDWARD.getSpeed());
+        }
+
+        if(SQUIDWARD.isFalling() && SQUIDWARD.getLayoutY() == ground){
+            SQUIDWARD.land();
         }
     }
 

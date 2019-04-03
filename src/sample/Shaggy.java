@@ -5,6 +5,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class Shaggy extends Character {
@@ -13,4 +14,5 @@ public class Shaggy extends Character {
         this.speed = 5;
         this.standRight();
     }
+
 }

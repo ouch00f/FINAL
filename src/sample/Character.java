@@ -16,7 +16,7 @@ public abstract class Character extends HBox {
     protected int atkRange = 5;
 
 
-    protected Image standingRight, standingLeft, runningRight, runningLeft,jumpingRight,jumpingLeft;
+    protected Image standingRight, standingLeft, runningRight, runningLeft,jumpingRight,jumpingLeft, attackingLeft, attackingRight;
     protected Image currentImage;//place holder such that images are not loaded continuously: Currently being tested to see if it's faster than loading continuously
     ImageView characterImage;
 
@@ -26,12 +26,14 @@ public abstract class Character extends HBox {
         this.setLayoutY(initialY);
 
         //Movement Images (these are arrows for the abstract character, but subclasses will overwrite the following Images)
-        standingRight = new Image("characterStandingRight.png");
-        standingLeft = new Image("characterStandingLeft.png");
-        runningRight = new Image("characterRunningRight.png");
-        runningLeft = new Image("characterRunningLeft.png");
-        jumpingLeft = new Image("characterJumpingLeft.png");
-        jumpingRight = new Image("characterJumpingRight.png");
+        standingRight = new Image("shaggy_idle_right.png");
+        standingLeft = new Image("shaggy_idle_left.png");
+        runningRight = new Image("shaggy_move_right.png");
+        runningLeft = new Image("shaggy_move_left.png");
+        jumpingLeft = new Image("shaggy_jump_left.png");
+        jumpingRight = new Image("shaggy_jump_right.png");
+        attackingLeft = new Image("shaggy_attack_left.png");
+        attackingRight = new Image("shaggy_attack_right.png");
 
 
         characterImage = new ImageView(jumpingLeft);
@@ -88,16 +90,17 @@ public abstract class Character extends HBox {
     public void jump(){
         if(facingRight) {
             this.setImage(jumpingRight);
-        }else{
+            // not sure else if is needed, check later
+        }else if (facingRight == false){
             this.setImage(jumpingLeft);
         }
     }
 
 
 
-    // Attacks
-    // takeHit if statement condition is good
-    public void takeHit(int pos1, int pos2){
+    // [Attacks]
+    // takeHit where if inreach is within range and is not blocking than decrease opponent hp
+    public void takeHit(double pos1, double pos2){
         boolean reach = false;
         if (pos1 <= (pos2+atkRange) || pos1 >= (pos2+atkRange) || pos1 <=(pos2-atkRange) || pos1 >= (pos2-atkRange)){
             reach = true;
@@ -108,9 +111,15 @@ public abstract class Character extends HBox {
     }
 
     // attack method
-    public void attack(Character opponent, int pos1, int pos2){
+    public void attack(Character opponent, double pos1, double pos2){
         opponent.takeHit(pos1, pos2);
+        if (isRunningLeft == true || facingRight == false) {
+            this.setImage(attackingLeft);
+        } else if (isRunningLeft == false || facingRight == true){
+            this.setImage(attackingRight);
+        }
     }
+
 
     /*// inReach method where attack will be valid if position 1 and near position 2
     public boolean inReach(int pos1, int pos2){
@@ -136,6 +145,7 @@ public abstract class Character extends HBox {
     public int getHealth(){return this.health;}
 
     public void setHealth(int newHealth){ this.health = newHealth;}
+
 
     public void land(){
         this.setFalling(false);

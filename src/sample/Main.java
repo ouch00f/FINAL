@@ -13,9 +13,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Main extends Application {
+
     int ground = 300;
-    Squidward SQUIDWARD = new Squidward(1000,ground);
-    public Shaggy SHAGGY = new Shaggy(25,ground);
+    Squidward SQUIDWARD = new Squidward(1000, ground);
+    public Shaggy SHAGGY = new Shaggy(25, ground);
     KeyCode previousKeycode;
     Timer clock = new Timer();
 
@@ -35,7 +36,6 @@ public class Main extends Application {
         primaryStage.show();
         primaryStage.setOnHiding( event -> {Runtime.getRuntime().exit(0);} );//Ends all processes of application on stage close
         root.getChildren().add(SHAGGY);
-
 
 
         //Key event filters
@@ -113,7 +113,6 @@ public class Main extends Application {
         launch(args);
         connect();
         createTable();
-        insert('5');
     }
 
     // final fields used for sql string syntax

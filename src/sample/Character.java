@@ -9,9 +9,11 @@ import java.io.IOException;
 public abstract class Character extends HBox {
     //Fields
     protected float speed, jumpConstant;
-
     protected boolean isBlocking, isFalling, facingRight, isRunningRight, isRunningLeft;
     protected int health;
+    protected int damage = 10;
+    protected int dmgAmount;
+    protected int atkRange = 5;
 
 
     protected Image standingRight, standingLeft, runningRight, runningLeft,jumpingRight,jumpingLeft;
@@ -30,7 +32,6 @@ public abstract class Character extends HBox {
         runningLeft = new Image("characterRunningLeft.png");
         jumpingLeft = new Image("characterJumpingLeft.png");
         jumpingRight = new Image("characterJumpingRight.png");
-
 
 
         characterImage = new ImageView(jumpingLeft);
@@ -92,26 +93,41 @@ public abstract class Character extends HBox {
         }
     }
 
-    public void takeHit(int damage){
-        if(!this.isBlocking()) { //when this character is not blocking it then takes damage
-            this.setHealth(this.getHealth()-damage);
+
+
+    // Attacks
+    // takeHit if statement condition is good
+    public void takeHit(int pos1, int pos2){
+        boolean reach = false;
+        if (pos1 <= (pos2+atkRange) || pos1 >= (pos2+atkRange) || pos1 <=(pos2-atkRange) || pos1 >= (pos2-atkRange)){
+            reach = true;
+        }
+        if(!this.isBlocking() && reach == true){ //when this character is not blocking it then takes damage
+            this.setHealth(this.getHealth()-this.damage);
         }
     }
 
-    public void attack(Character opponent, int damage){
-        opponent.takeHit(damage);
+    // attack method
+    public void attack(Character opponent, int pos1, int pos2){
+        opponent.takeHit(pos1, pos2);
     }
+
+    /*// inReach method where attack will be valid if position 1 and near position 2
+    public boolean inReach(int pos1, int pos2){
+        boolean reach = false;
+        if (pos1 <= (pos2+this.atkRange) || pos1 >= (pos2+this.atkRange)){
+            reach = true;
+        } return reach;
+    }*/
 
 
     protected boolean differentImage(Image img){ return !(img == this.getCurrentImage()); }
 
 
-
-
     //Accessors and mutators
     public boolean isBlocking(){ return this.isBlocking;}
 
-    public boolean isRunningRight(){return this.isRunningRight;}
+    public boolean isRunningRight() {return this.isRunningRight;}
 
     public boolean isRunningLeft(){return  this.isRunningLeft;}
 

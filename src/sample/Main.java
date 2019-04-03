@@ -113,8 +113,8 @@ public class Main extends Application {
         launch(args);
         connect();
         createTable();
+        insert('5');
     }
-
 
     // final fields used for sql string syntax
     private static final String insertSQL = "INSERT INTO HighScores(dmgDealt) VALUES(?)";

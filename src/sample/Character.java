@@ -32,15 +32,15 @@ public abstract class Character extends HBox {
 
 
 
-        //Movement Images (these are arrows for the abstract character, but subclasses will overwrite the following Images)
-        standingRight = new Image("shaggy_idle_right.png");
-        standingLeft = new Image("shaggy_idle_left.png");
-        runningRight = new Image("shaggy_move_right.png");
-        runningLeft = new Image("shaggy_move_left.png");
-        jumpingLeft = new Image("shaggy_jump_left.png");
-        jumpingRight = new Image("shaggy_jump_right.png");
-        attackingLeft = new Image("shaggy_attack_left.png");
-        attackingRight = new Image("shaggy_attack_right.png");
+//        //Movement Images (these are arrows for the abstract character, but subclasses will overwrite the following Images)
+//        standingRight = new Image("shaggy_idle_right.png");
+//        standingLeft = new Image("shaggy_idle_left.png");
+//        runningRight = new Image("shaggy_move_right.png");
+//        runningLeft = new Image("shaggy_move_left.png");
+//        jumpingLeft = new Image("shaggy_jump_left.png");
+//        jumpingRight = new Image("shaggy_jump_right.png");
+//        attackingLeft = new Image("shaggy_attack_left.png");
+//        attackingRight = new Image("shaggy_attack_right.png");
 
 
         characterImage = new ImageView(jumpingLeft);

@@ -7,6 +7,9 @@ import java.sql.*;
 
 public class SQLite {
 
+
+    // The connection method to get the connection to and from our database
+    // Status: working
     public static void getConnection(){
         Connection conn = null;
         try {
@@ -30,9 +33,10 @@ public class SQLite {
 
     // Database: Create a table method
     // This method will create a table into our database for our highscores.
+    // Status: working
     public static void createTable(){
         String url = "jdbc:sqlite:ShaggyVsSquidward.db";
-        String tblSql = "CREATE TABLE IF NOT EXISTS HighScores(dmgDealt integer)";
+        String tblSql = "CREATE TABLE IF NOT EXISTS test(dmgDealt integer PRIMARY KEY)";
 
         try (Connection conn = DriverManager.getConnection(url);
              Statement statement = conn.createStatement()){
@@ -42,6 +46,8 @@ public class SQLite {
         }
     }
 
+    // Connection connect method
+    // Status: working
     private Connection connect(){
         String url = "jdbc:sqlite:ShaggyVsSquidward.db";
         Connection connection = null;
@@ -53,7 +59,8 @@ public class SQLite {
     }
 
 
-
+    // Method for displaying the entries in the table HighScores in our database
+    // Status: not working
     public void displayDB(){
         String sql = "SELECT dmgDealt FROM HighScores";
 
@@ -68,5 +75,19 @@ public class SQLite {
             System.out.println(e.getMessage());
         }
     }
+
+    // Use to insert a new highscore.
+    // Status: not working
+    public void insert(int dmgDealt){
+        String insertSQL = "INSERT INTO HighScores(dmgDealt) VALUES(?)";
+
+        try(Connection connection = this.connect();
+        PreparedStatement pStatement = connection.prepareStatement(insertSQL)){
+            pStatement.setInt(1, dmgDealt);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 
 }

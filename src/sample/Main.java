@@ -32,50 +32,49 @@ public class Main extends Application {
     public Main() throws IOException {
 
     }
+
     @Override
     public void start(Stage primaryStage) {
 
 
-            Group root = new Group();
-            primaryStage.setTitle("Shaggy VS Squidward");
-            Scene scene = new Scene(root, 800, 450);
-            primaryStage.setResizable(false);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-            primaryStage.setOnHiding(event -> {
-                Runtime.getRuntime().exit(0);
-            });//Ends all processes of application on stage close
-        
-
-            root.getChildren().add(SHAGGY);
-            root.getChildren().add(SQUIDWARD);
+        Group root = new Group();
+        primaryStage.setTitle("Shaggy VS Squidward");
+        Scene scene = new Scene(root, 800, 450);
+        primaryStage.setResizable(false);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        primaryStage.setOnHiding(event -> {
+            Runtime.getRuntime().exit(0);
+        });//Ends all processes of application on stage close
 
 
-            //Key event filters
-            scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {//key press controls
-                this.keyPress(keyEvent.getCode());
-            });
+        root.getChildren().add(SHAGGY);
+        root.getChildren().add(SQUIDWARD);
 
-            scene.addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> {//key press controls
-                this.keyRelease(keyEvent.getCode());
-            });
 
-            //All timing and motion tools
-            Timer timer = new Timer(45, e -> {
-                checkConditions(SHAGGY);
-                checkConditions(SQUIDWARD);
-            });
-            timer.start();
+        //Key event filters
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {//key press controls
+            this.keyPress(keyEvent.getCode());
+        });
+
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> {//key press controls
+            this.keyRelease(keyEvent.getCode());
+        });
+
+        //All timing and motion tools
+        Timer timer = new Timer(45, e -> {
+            checkConditions(SHAGGY);
+            checkConditions(SQUIDWARD);
+        });
+        timer.start();
 
     }
 
 
+    public void keyPress(KeyCode keycode) {//when keys are pressed
 
 
-    public void keyPress(KeyCode keycode){//when keys are pressed
-
-
-        switch(keycode) {
+        switch (keycode) {
 
 
             // SHAGGY CONTROLS
@@ -123,12 +122,12 @@ public class Main extends Application {
                 break;
 
         }
-       // System.out.println("Shaggy Position(X):"+SHAGGY.getLayoutX());
-        System.out.println("Shaggy Health:"+SHAGGY.getHealth());
+        // System.out.println("Shaggy Position(X):"+SHAGGY.getLayoutX());
+        System.out.println("Shaggy Health:" + SHAGGY.getHealth());
 
     }
 
-    public void keyRelease(KeyCode keycode){//when keys are released
+    public void keyRelease(KeyCode keycode) {//when keys are released
 
 
         // TO IMPLEMENT MENU ONLY START WHEN GAME STARTS
@@ -204,38 +203,36 @@ public class Main extends Application {
     }
 
 
-
-
-    public void checkConditions(Character player){//continuously checks conditions on the tick of a timer
+    public void checkConditions(Character player) {//continuously checks conditions on the tick of a timer
 //        //////////////////////message
 //        if (SHAGGY.isTouching(SQUIDWARD)) {
 //            System.out.println("The characters are touching: " + SHAGGY.isTouching(SQUIDWARD));
 //        }
 
 
-        if(player.isRunningRight()){
-            player.setLayoutX(player.getLayoutX()+player.getSpeed());
+        if (player.isRunningRight()) {
+            player.setLayoutX(player.getLayoutX() + player.getSpeed());
         }
 
-        if(player.isRunningLeft()){
-            player.setLayoutX(player.getLayoutX()-player.getSpeed());
+        if (player.isRunningLeft()) {
+            player.setLayoutX(player.getLayoutX() - player.getSpeed());
         }
 
-        if(player.getLayoutY() <= ground){//when the player is falling
+        if (player.getLayoutY() <= ground) {//when the player is falling
             //player.jump();
             player.fall();
 
             //check to see if player has changed to hit ground
-            if(player.getLayoutY() >= ground) {
+            if (player.getLayoutY() >= ground) {
                 player.land();
             }
         }
 
         //boundaries of the stage and ensuring player does not exceed them
-        if(player.getLayoutX()>750){
+        if (player.getLayoutX() > 750) {
             player.setLayoutX(750);
         }
-        if(player.getLayoutX()<0){
+        if (player.getLayoutX() < 0) {
             player.setLayoutX(0);
         }
 
@@ -249,8 +246,11 @@ public class Main extends Application {
         sql.getConnection();
         // creates a table in db.
         sql.createTable();
+        // insert for new highscore in db.
+        sql.insert(100);
         // displays db data.
         sql.displayDB();
         launch(args);
 
     }
+}

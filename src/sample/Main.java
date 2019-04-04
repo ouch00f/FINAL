@@ -250,14 +250,25 @@ public class Main extends Application {
     // Early testing for now, using the console.
     // With an end condition that will calculate score and winner.
     public void endCondition(){
+
         if (SHAGGY.health<=0){
             System.out.println("Shaggy's Score: "+SHAGGY.score);
             System.out.println("Squidward's Score: "+SQUIDWARD.score+"\nSQUIDWARD WINS! by "+(SQUIDWARD.score-SHAGGY.score));
+            SQUIDWARD.coins += 1;
+
             Menu menu = new Menu();
         } else if (SQUIDWARD.health<=0){
             System.out.println("Squidward's Score: "+SQUIDWARD.score);
             System.out.println("Shaggy's Score: "+SHAGGY.score+"\nSHAGGY WINS! by "+(SHAGGY.score-SQUIDWARD.score));
+            SHAGGY.coins += 1;
             Menu menu = new Menu();
+        }
+    }
+
+    // Early upgrade method, not sure how i'm going to implement it atm.
+    public void upgrade(){
+        if (SHAGGY.coins == 10 || SQUIDWARD.coins ==10){
+            // be able to purchase upgrade
         }
     }
 }

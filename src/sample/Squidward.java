@@ -20,8 +20,8 @@ public class Squidward extends Character {
         jumpingRight =  new Image("squidward_jump_right.png");
         attackingLeft = new Image("squidward_attack_left.png");
         attackingRight = new Image("squidward_attack_right.png");
-        blockingLeft = new Image("squidward_blocking_left.png");
-        blockingRight = new Image ("squidward_blocking_right.png");
+        blockingLeft = new Image("squidward_block_left.png");
+        blockingRight = new Image ("squidward_block_right.png");
         damagedLeft = new Image ("squidward_damaged_left.png");
         damagedRight = new Image ("squidward_damaged_right.png");
 

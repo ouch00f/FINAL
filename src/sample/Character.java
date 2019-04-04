@@ -11,7 +11,7 @@ public abstract class Character extends HBox {
     protected double speed, jumpConstant, jumpVariable, fallConstant;
 
     protected boolean isBlocking, isFalling,isJumping, facingRight, isRunningRight, isRunningLeft;
-    protected int health;
+    protected int health = 1000;
     protected int damage = 10;
     protected int dmgAmount;
     protected int atkRange = 5;

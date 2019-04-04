@@ -25,8 +25,8 @@ public class Shaggy extends Character {
         jumpingRight = new javafx.scene.image.Image("shaggy_jump_right.png");
         attackingLeft = new javafx.scene.image.Image("shaggy_attack_left.png");
         attackingRight = new Image("shaggy_attack_right.png");
-        blockingLeft = new Image("shaggy_blocking_left.png");
-        blockingRight = new Image ("shaggy_blocking_right.png");
+        blockingLeft = new Image("shaggy_block_left.png");
+        blockingRight = new Image ("shaggy_block_right.png");
         damagedLeft = new Image ("shaggy_damaged_left.png");
         damagedRight = new Image ("shaggy_damaged_right.png");
 

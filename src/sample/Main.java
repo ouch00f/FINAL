@@ -1,13 +1,19 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+
 
 import javax.swing.*;
+//import java.awt.*;
+import java.awt.*;
 import java.io.IOException;
 import java.sql.*;
 
@@ -18,6 +24,10 @@ public class Main extends Application {
     Squidward SQUIDWARD = new Squidward(675, ground);
     Shaggy SHAGGY = new Shaggy(25, ground);
 
+    // menu stuff
+    Stage window;
+    Scene menu1, menu2;
+
 
     public Main() throws IOException {
 
@@ -25,43 +35,50 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        Group root = new Group();
 
-        primaryStage.setTitle("");
-        Scene scene = new Scene(root, 800, 450);
-        primaryStage.setResizable(false);
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
-        primaryStage.show();
-        primaryStage.setOnHiding( event -> {Runtime.getRuntime().exit(0);} );//Ends all processes of application on stage close
-        root.getChildren().add(SHAGGY);
-        root.getChildren().add(SQUIDWARD);
+            Group root = new Group();
+            primaryStage.setTitle("Shaggy VS Squidward");
+            Scene scene = new Scene(root, 800, 450);
+            primaryStage.setResizable(false);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            primaryStage.setOnHiding(event -> {
+                Runtime.getRuntime().exit(0);
+            });//Ends all processes of application on stage close
+        
+
+            root.getChildren().add(SHAGGY);
+            root.getChildren().add(SQUIDWARD);
 
 
-        //Key event filters
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {//key press controls
-            this.keyPress(keyEvent.getCode());
-        });
+            //Key event filters
+            scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {//key press controls
+                this.keyPress(keyEvent.getCode());
+            });
 
-        scene.addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> {//key press controls
-            this.keyRelease(keyEvent.getCode());
-        });
+            scene.addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> {//key press controls
+                this.keyRelease(keyEvent.getCode());
+            });
 
-        //All timing and motion tools
-        Timer timer = new Timer(45, e -> {
-            checkConditions(SHAGGY);
-            checkConditions(SQUIDWARD);
-        });
-        timer.start();
-
+            //All timing and motion tools
+            Timer timer = new Timer(45, e -> {
+                checkConditions(SHAGGY);
+                checkConditions(SQUIDWARD);
+            });
+            timer.start();
 
     }
 
+
+
+
     public void keyPress(KeyCode keycode){//when keys are pressed
 
-        switch(keycode){
 
-                // SHAGGY CONTROLS
+        switch(keycode) {
+
+
+            // SHAGGY CONTROLS
             case D:
                 SHAGGY.runRight();
                 break;
@@ -73,7 +90,7 @@ public class Main extends Application {
                 //SHAGGY.attack(SQUIDWARD, SHAGGY.getLayoutX(), SQUIDWARD.getLayoutX());
                 break;
             case W:
-                SHAGGY.jumpVariable = SHAGGY.jumpVariable/2;
+                SHAGGY.jumpVariable = SHAGGY.jumpVariable / 2;
                 break;
             case S:
                 SHAGGY.block();
@@ -86,7 +103,7 @@ public class Main extends Application {
                 break;
 
 
-                // SQUIDWARD CONTROLS
+            // SQUIDWARD CONTROLS
             case L:
                 SQUIDWARD.runRight();
                 break;
@@ -96,14 +113,15 @@ public class Main extends Application {
             case P:
                 SQUIDWARD.attack(SHAGGY);
                 break;
-                //SQUIDWARD.attack(SHAGGY,SQUIDWARD.getLayoutX(), SHAGGY.getLayoutX());
+            //SQUIDWARD.attack(SHAGGY,SQUIDWARD.getLayoutX(), SHAGGY.getLayoutX());
             case I:
-                SQUIDWARD.jumpVariable = SQUIDWARD.jumpVariable/2;
+                SQUIDWARD.jumpVariable = SQUIDWARD.jumpVariable / 2;
                 break;
             case K:
                 SQUIDWARD.block();
                 SQUIDWARD.setBlocking(true);
                 break;
+
         }
        // System.out.println("Shaggy Position(X):"+SHAGGY.getLayoutX());
         System.out.println("Shaggy Health:"+SHAGGY.getHealth());
@@ -112,16 +130,20 @@ public class Main extends Application {
 
     public void keyRelease(KeyCode keycode){//when keys are released
 
-        switch (keycode){
+
+        // TO IMPLEMENT MENU ONLY START WHEN GAME STARTS
+
+
+        switch (keycode) {
             // SHAGGY's
             case W:
                 SHAGGY.jump();
                 break;
 
             case S:
-                if (!SHAGGY.getFacingRight()){
+                if (!SHAGGY.getFacingRight()) {
                     SHAGGY.standLeft();
-                } else{
+                } else {
                     SHAGGY.standRight();
                 }
                 SHAGGY.setBlocking(false);
@@ -141,14 +163,14 @@ public class Main extends Application {
 
             case C:
                 // Upon attacking, this key release will set the image for shaggy position depending on where he faces.
-                if (SHAGGY.isRunningLeft || !SHAGGY.getFacingRight()){
+                if (SHAGGY.isRunningLeft || !SHAGGY.getFacingRight()) {
                     SHAGGY.standLeft();
                 } else {
                     SHAGGY.standRight();
                 }
                 break;
 
-                // SQUIDWARD's
+            // SQUIDWARD's
             case I:
                 SQUIDWARD.jump();
                 break;
@@ -162,7 +184,7 @@ public class Main extends Application {
                 break;
 
             case K:
-                if (!SQUIDWARD.getFacingRight()){
+                if (!SQUIDWARD.getFacingRight()) {
                     SQUIDWARD.standLeft();
                 } else {
                     SQUIDWARD.standRight();
@@ -172,7 +194,7 @@ public class Main extends Application {
 
             // Upon attacking, this key release will set the image for squidward position depending on where he faces.
             case P:
-                if (SQUIDWARD.isRunningLeft() || !SQUIDWARD.getFacingRight()){
+                if (SQUIDWARD.isRunningLeft() || !SQUIDWARD.getFacingRight()) {
                     SQUIDWARD.standLeft();
                 } else {
                     SQUIDWARD.standRight();
@@ -285,6 +307,7 @@ public class Main extends Application {
         }
     }
 
+
     // Suppose to select all row in the HighScore DB & print them out.
     private void selectAll(){
         String sql = "SELECT dmgDealt FROM HighScores";
@@ -304,5 +327,4 @@ public class Main extends Application {
             System.out.println(e.getMessage());
         }
     }
-
 }

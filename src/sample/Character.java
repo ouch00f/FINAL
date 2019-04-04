@@ -11,7 +11,7 @@ public abstract class Character extends HBox {
     protected double speed, jumpConstant, jumpVariable, fallConstant;
 
     protected boolean isBlocking, isFalling,isJumping, facingRight, isRunningRight, isRunningLeft;
-    protected int health = 1000;
+    protected int health = 100;
     protected int damage = 10;
     protected int dmgAmount;
     protected int atkRange = 5;
@@ -149,7 +149,7 @@ public abstract class Character extends HBox {
 
 
     // [Attacks]--------------------------------------------------------------------------------------------------------
-    // Hey Sandy, I simplified some of the attack methods if you are ok with that
+
     public void attack(Character opponent){
         if(this.isTouching(opponent) && opponent.isBlocking) {
             System.out.println("Attack Blocked!");
@@ -185,43 +185,6 @@ public abstract class Character extends HBox {
             this.setImage(blockingLeft);
         }
     }
-
-
-
-
-
-
-
-    // takeHit where if inreach is within range and is not blocking than decrease opponent hp
-    /*public void takeHit(double pos1, double pos2){
-        boolean reach = false;
-        if (pos1 <= (pos2+atkRange) || pos1 >= (pos2+atkRange) || pos1 <=(pos2-atkRange) || pos1 >= (pos2-atkRange)){
-            reach = true;
-        }
-        if(!this.isBlocking() && reach == true){ //when this character is not blocking it then takes damage
-            this.setHealth(this.getHealth()-this.damage);
-        }
-    }*/
-
-    /*// attack method
-    public void attack(Character opponent, double pos1, double pos2){
-        opponent.takeHit(pos1, pos2);
-        if (isRunningLeft == true || facingRight == false) {
-            this.setImage(attackingLeft);
-        } else if (isRunningLeft == false || facingRight == true){
-            this.setImage(attackingRight);
-        }
-    }*/
-     /*// inReach method where attack will be valid if position 1 and near position 2
-    public boolean inReach(int pos1, int pos2){
-        boolean reach = false;
-        if (pos1 <= (pos2+this.atkRange) || pos1 >= (pos2+this.atkRange)){
-            reach = true;
-        } return reach;
-    }*/
-
-
-
 
 
 

@@ -90,6 +90,4 @@ public class SQLite {
             System.out.println(e.getMessage());
         }
     }
-
-
 }

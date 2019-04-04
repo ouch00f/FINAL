@@ -47,7 +47,7 @@ public class SQLite {
     }
 
     // Connection connect method
-    // Status: workings
+    // Status: working
     private Connection connect(){
         String url = "jdbc:sqlite:ShaggyVsSquidward.db";
         Connection connection = null;
@@ -70,7 +70,7 @@ public class SQLite {
 
             while (result.next()){
 
-                System.out.println("Current Highscores: "+result.getInt("dmgDealt"));
+                System.out.println("Current Highscore: "+result.getInt("dmgDealt"));
             }
         } catch (SQLException e){
             System.out.println(e.getMessage());
@@ -86,6 +86,19 @@ public class SQLite {
         PreparedStatement pStatement = connection.prepareStatement(insertSQL)){
             pStatement.setInt(1, newScore);
             pStatement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // This method will update the highscore by updating the entry when a new highscore is called
+    // status: working
+    public void update (int newScore){
+        String sql = "UPDATE HighScores SET dmgDealt = ?";
+        try(Connection connection = this.connect();
+        PreparedStatement pstatement = connection.prepareStatement(sql)){
+            pstatement.setInt(1, newScore);
+            pstatement.executeUpdate();
         } catch (Exception e){
             System.out.println(e.getMessage());
         }

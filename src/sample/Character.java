@@ -15,6 +15,7 @@ public abstract class Character extends HBox {
     protected int damage = 10;
     protected int dmgAmount;
     protected int atkRange = 5;
+    protected int score = 0;
 
     protected Image standingRight, standingLeft, runningRight, runningLeft,jumpingRight,jumpingLeft, attackingLeft, attackingRight, blockingLeft, blockingRight, damagedLeft, damagedRight;
     protected Image currentImage;//place holder such that images are not loaded continuously: Currently being tested to see if it's faster than loading continuously
@@ -150,12 +151,12 @@ public abstract class Character extends HBox {
 
     // [Attacks]--------------------------------------------------------------------------------------------------------
 
-    public void attack(Character opponent){
+    public void attack(Character opponent, Character player){
         if(this.isTouching(opponent) && opponent.isBlocking) {
             System.out.println("Attack Blocked!");
         } else if(this.isTouching(opponent) && !opponent.isBlocking){
             opponent.setHealth(opponent.getHealth() - this.damage);
-
+            player.score += this.damage;
             // changes the opponent's character when damaged.
             // need to implement a timer where it changes back, thinking of a method for that hmm.
             if(opponent.facingRight || opponent.isRunningRight){
@@ -209,6 +210,10 @@ public abstract class Character extends HBox {
     public int getHealth(){return this.health;}
 
     public void setHealth(int newHealth){ this.health = newHealth;}
+
+    public int getScore(){return this.score;}
+
+    public void setScore(int score){ this.health = score;}
 
 
 

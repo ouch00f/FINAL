@@ -86,7 +86,7 @@ public class Main extends Application {
                 SHAGGY.runLeft();
                 break;
             case C:
-                SHAGGY.attack(SQUIDWARD);
+                SHAGGY.attack(SQUIDWARD, SHAGGY);
                 //SHAGGY.attack(SQUIDWARD, SHAGGY.getLayoutX(), SQUIDWARD.getLayoutX());
                 break;
             case W:
@@ -107,7 +107,7 @@ public class Main extends Application {
                 SQUIDWARD.runLeft();
                 break;
             case P:
-                SQUIDWARD.attack(SHAGGY);
+                SQUIDWARD.attack(SHAGGY, SQUIDWARD);
                 break;
             //SQUIDWARD.attack(SHAGGY,SQUIDWARD.getLayoutX(), SHAGGY.getLayoutX());
             case I:
@@ -246,10 +246,17 @@ public class Main extends Application {
         launch(args);
 
     }
+
+    // Early testing for now, using the console.
+    // With an end condition that will calculate score and winner.
     public void endCondition(){
         if (SHAGGY.health<=0){
+            System.out.println("Shaggy's Score: "+SHAGGY.score);
+            System.out.println("Squidward's Score: "+SQUIDWARD.score+"\nSQUIDWARD WINS! by "+(SQUIDWARD.score-SHAGGY.score));
             Menu menu = new Menu();
         } else if (SQUIDWARD.health<=0){
+            System.out.println("Squidward's Score: "+SQUIDWARD.score);
+            System.out.println("Shaggy's Score: "+SHAGGY.score+"\nSHAGGY WINS! by "+(SHAGGY.score-SQUIDWARD.score));
             Menu menu = new Menu();
         }
     }

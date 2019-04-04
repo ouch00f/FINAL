@@ -247,7 +247,7 @@ public class Main extends Application {
         // creates a table in db.
         sql.createTable();
         // insert for new highscore in db.
-        sql.insert(100);
+        sql.insert(150);
         // displays db data.
         sql.displayDB();
         launch(args);

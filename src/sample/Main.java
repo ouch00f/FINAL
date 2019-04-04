@@ -3,6 +3,7 @@ package sample;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -33,9 +34,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
 
+
         Group root = new Group();
         primaryStage.setTitle("Shaggy VS Squidward");
         Scene scene = new Scene(root, 800, 450);
+
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -44,6 +47,8 @@ public class Main extends Application {
         });//Ends all processes of application on stage close
 
 
+
+        // Adding object characters to scene.
         root.getChildren().add(SHAGGY);
         root.getChildren().add(SQUIDWARD);
 
@@ -91,10 +96,6 @@ public class Main extends Application {
                 SHAGGY.block();
                 SHAGGY.setBlocking(true);
 
-//                // just to fix image scaling (REMOVE AFTER SPRITES ARE SUBMITTED FROM CHARAN.)
-//                SHAGGY.setLayoutY(340);
-//                //
-
                 break;
 
 
@@ -126,7 +127,6 @@ public class Main extends Application {
     public void keyRelease(KeyCode keycode) {//when keys are released
 
 
-        // TO IMPLEMENT MENU ONLY START WHEN GAME STARTS
 
 
         switch (keycode) {
@@ -142,11 +142,6 @@ public class Main extends Application {
                     SHAGGY.standRight();
                 }
                 SHAGGY.setBlocking(false);
-
-//                 ONLY FOR SPRITE IMAGE SCALING PROBLEM (REMOVE WHEN CHARAN SUBMITS SPRITES.)
-//                SHAGGY.setLayoutY(ground);
-
-
                 break;
 
             case D:
@@ -244,8 +239,8 @@ public class Main extends Application {
         sql.getConnection();
         // creates a table in db.
         sql.createTable();
-        // insert for new highscore in db.
-        sql.insert(150);
+        // updates the highscore into the database.
+        sql.update(400);
         // displays db data.
         sql.displayDB();
         launch(args);

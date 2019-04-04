@@ -18,15 +18,11 @@ import java.io.IOException;
 import java.sql.*;
 
 public class Main extends Application {
-    int ground = 300;
 
     // Character/object instantiation
+    int ground = 300;
     Squidward SQUIDWARD = new Squidward(675, ground);
     Shaggy SHAGGY = new Shaggy(25, ground);
-
-    // menu stuff
-    Stage window;
-    Scene menu1, menu2;
 
 
     public Main() throws IOException {
@@ -167,6 +163,7 @@ public class Main extends Application {
                 } else {
                     SHAGGY.standRight();
                 }
+                endCondition();
                 break;
 
             // SQUIDWARD's
@@ -198,6 +195,7 @@ public class Main extends Application {
                 } else {
                     SQUIDWARD.standRight();
                 }
+                endCondition();
                 break;
         }
     }
@@ -252,5 +250,12 @@ public class Main extends Application {
         sql.displayDB();
         launch(args);
 
+    }
+    public void endCondition(){
+        if (SHAGGY.health<=0){
+            Menu menu = new Menu();
+        } else if (SQUIDWARD.health<=0){
+            Menu menu = new Menu();
+        }
     }
 }

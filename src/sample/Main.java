@@ -272,17 +272,17 @@ public class Main extends Application {
     }
 
     // Use to call the method in database that will delete the amount of coins that the upgrade costs (20).
-    public void purchaseUpgrade(int coins){
-        Database purchaseUpgrade = new Database();
-        // if coins is >=20 then upgrade is available
-        if (coins >= 20){
-            // decreases the coins in database by 20.
-            purchaseUpgrade.decreaseCoins(20);
-            if (SHAGGY.coins == coins){
-                SHAGGY.coins -= 20;
-            } else if (SQUIDWARD.coins == coins){
-                SQUIDWARD.coins -=20;
-            }
-        }
-    }
+//    public void purchaseUpgrade(int coins){
+//        Database purchaseUpgrade = new Database();
+//        // if coins is >=20 then upgrade is available
+//        if (coins >= 20){
+//            // decreases the coins in database by 20.
+//            purchaseUpgrade.decreaseCoins(20);
+//            if (SHAGGY.coins == coins){
+//                SHAGGY.coins -= 20;
+//            } else if (SQUIDWARD.coins == coins){
+//                SQUIDWARD.coins -=20;
+//            }
+//        }
+//    }
 }

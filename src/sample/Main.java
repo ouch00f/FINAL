@@ -16,7 +16,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-
 import javax.swing.*;
 import javax.xml.crypto.Data;
 //import java.awt.*;
@@ -38,69 +37,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         mainMenu(primaryStage);
     }
-
-    public void purchaseConfirm(Stage primaryStage){
-
-        // Insantiation of the data object, used to retrieve data and use methods in the database class.
-        Database sql = new Database();
-
-        // This method will update the current coins to be loaded for future use such as displaying and purchasing
-        // for upgrade purchases.
-        sql.updateTotalCoins();
-
-        // Instantiation and settings for text label that will inform how much the upgrade costs.
-        Text purchaseInfo = new Text("20 coins for +5 damage");
-        purchaseInfo.setLayoutY(100);
-        purchaseInfo.setTextAlignment(TextAlignment.CENTER);
-        purchaseInfo.setLayoutX(300);
-        purchaseInfo.setFill(Color.DARKRED);
-        purchaseInfo.setFont(new Font("Georgia", 18));
-
-        // Instantiation and settings for the Label, that will show how much coins you currently have.
-        Label wallet = new Label("Wallet: "+sql.totalAmount+" coins.");
-        wallet.setLayoutX(325);
-        wallet.setLayoutY(180);
-        wallet.setTextFill(Color.GREEN);
-        wallet.setFont(new Font ("Georgia", 15));
-        wallet.setVisible(true);
-
-
-        // Instantiation and settings for the button, this button will act as a purchase button and will apply the upgrade
-        // if current coins >= 20.
-        Button purchaseBtn = new Button("Purchase");
-        purchaseBtn.setLayoutX(350);
-        purchaseBtn.setLayoutY(200);
-        purchaseBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // This will change the stage to the purchase menu/stage, where info is given for upgrades
-                purchaseConfirm(primaryStage);
-                // Updates the databases to ensure coins are loaded.
-                sql.updateTotalCoins();
-                // If the total amount of the coins in the database is >= 20 then you're allowed to purchase.
-                if (sql.totalAmount >= 20) {
-                    // Purchase is made by calling the purchaseUpgrade method in the database class, this will
-                    // subtract 20 coins and update the database to 1 entry only.
-                    sql.purchaseUpgrade();
-                    // Increase the attack of both Shaggy and Squidward as upgrade is applied.
-                    SHAGGY.damage += 5;
-                    SQUIDWARD.damage += 5;
-                }
-                // Brings it back to main menu
-                mainMenu(primaryStage);
-
-            }
-        });
-
-
-        Group root = new Group();
-        root.getChildren().add(purchaseInfo);
-        root.getChildren().add(purchaseBtn);
-        root.getChildren().add(wallet);
-        primaryStage.setScene(new Scene(root, 800, 450));
-        primaryStage.show();
-    }
-
+    
     public void mainMenu(Stage primaryStage) {
         //Display for openning game
         Text txtMenu = new Text("Ultimate Fighter:\nSHAGGY AT 0.01% POWER LEVEL VS SQUIDWARD EDITION");

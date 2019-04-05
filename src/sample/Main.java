@@ -232,17 +232,16 @@ public class Main extends Application {
 
         // connects to db.
         sql.getConnection();
-        // creates a table in db.
+        // creates a table in db, if not already created.
         sql.createTable();
-        // inserts to database
-//        sql.insertScore(200);
+
+        // use for dummy trials atm
         sql.insertCoins(5);
-        // updates the highscore into the database.
-        //sql.updateScore(500);
-        // displays db data.
-        //sql.deleteScore(100);
-        sql.displayScore();
-        sql.displayTotal();
+
+        // Displays the top 5 highscores stored in database
+        sql.displayTopFive();
+        // Displays the total amount of coins in wallet from database.
+        sql.displayTotalCoins();
         // starts program
         launch(args);
 
@@ -251,36 +250,23 @@ public class Main extends Application {
     // Early testing for now, using the console.
     // With an end condition that will calculate score and winner.
     public void endCondition(){
-        Database scoreSQL = new Database();
+        Database endSQL = new Database();
 
         if (SHAGGY.health<=0){
             System.out.println("\nShaggy's Score: "+SHAGGY.score);
             System.out.println("Squidward's Score: "+SQUIDWARD.score+"\nSQUIDWARD WINS! by "+(SQUIDWARD.score-SHAGGY.score));
-            scoreSQL.insertScore(SQUIDWARD.score);
+            endSQL.insertScore(SQUIDWARD.score);
             SQUIDWARD.coins += 1;
+            endSQL.insertCoins(1);
 
             Menu menu = new Menu();
         } else if (SQUIDWARD.health<=0){
             System.out.println("\nSquidward's Score: "+SQUIDWARD.score);
             System.out.println("Shaggy's Score: "+SHAGGY.score+"\nSHAGGY WINS! by "+(SHAGGY.score-SQUIDWARD.score));
-            scoreSQL.insertScore(SHAGGY.score);
+            endSQL.insertScore(SHAGGY.score);
             SHAGGY.coins += 1;
+            endSQL.insertCoins(1);
             Menu menu = new Menu();
-        }
-    }
-
-    // Early trials of inserting the higher score into the database
-    public static void conditionalInsertScore(int score1, int score2){
-        Database scoreSQL = new Database();
-        int winningScore;
-        if (score1>score2){
-            winningScore = score1;
-            scoreSQL.insertScore(winningScore);
-        } else if (score1<score2){
-            winningScore = score2;
-            scoreSQL.insertScore(winningScore);
-        } else if (score1==score2){
-            System.out.println("same score");
         }
     }
 

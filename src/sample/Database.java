@@ -193,43 +193,46 @@ public class Database {
         }
     }
 
-    // This method will update the highscore by updating the entry when a new highscore is called
-    // status: working
-    public void updateScore (int newScore){
-        String sql = "UPDATE HighScores SET dmgDealt = ?";
-        try(Connection connection = this.connect();
-        PreparedStatement pstatement = connection.prepareStatement(sql)){
-            pstatement.setInt(1, newScore);
-            pstatement.executeUpdate();
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
+    // CAN PROBABLY DELETE
+//    // This method will update the highscore by updating the entry when a new highscore is called
+//    // status: working
+//    public void updateScore (int newScore){
+//        String sql = "UPDATE HighScores SET dmgDealt = ?";
+//        try(Connection connection = this.connect();
+//        PreparedStatement pstatement = connection.prepareStatement(sql)){
+//            pstatement.setInt(1, newScore);
+//            pstatement.executeUpdate();
+//        } catch (Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
 
-    // Deletes entries equal to the parameter score
-    public void deleteScore(int score){
-        String delScore = "DELETE FROM HighScores WHERE dmgDealt = ?";
-        try(Connection connection = this.connect();
-            PreparedStatement statement = connection.prepareStatement(delScore)){
-                statement.setInt(1, score);
-                statement.executeUpdate();
-        } catch (Exception e){
-                System.out.println(e.getMessage());
-        }
-    }
+    // CAN PROB DELETE
+//    // Deletes entries equal to the parameter score
+//    public void deleteScore(int score){
+//        String delScore = "DELETE FROM HighScores WHERE dmgDealt = ?";
+//        try(Connection connection = this.connect();
+//            PreparedStatement statement = connection.prepareStatement(delScore)){
+//                statement.setInt(1, score);
+//                statement.executeUpdate();
+//        } catch (Exception e){
+//                System.out.println(e.getMessage());
+//        }
+//    }
 
-    // Use to decrease the amount that will cost for upgrading damage.
-    // Status: Need to take the SUM of all values in coins first
-    public void decreaseCoins(int coins){
-        String purchaseSQL = "DELETE FROM Currency WHERE dmgDealt = ?";
-        try(Connection connection = this.connect();
-            PreparedStatement statement = connection.prepareStatement(purchaseSQL)){
-                statement.setInt(1,coins);
-                statement.executeUpdate();
-        } catch (Exception e){
-                System.out.print(e.getMessage());
-        }
-    }
+    // CAN PROB DELETE
+//    // Use to decrease the amount that will cost for upgrading damage.
+//    // Status: Need to take the SUM of all values in coins first
+//    public void decreaseCoins(int coins){
+//        String purchaseSQL = "DELETE FROM Currency WHERE dmgDealt = ?";
+//        try(Connection connection = this.connect();
+//            PreparedStatement statement = connection.prepareStatement(purchaseSQL)){
+//                statement.setInt(1,coins);
+//                statement.executeUpdate();
+//        } catch (Exception e){
+//                System.out.print(e.getMessage());
+//        }
+//    }
 
     // Gives this.totalAmount the coin value of the sum of coins in Currency table in database.
     public int getCoins(){

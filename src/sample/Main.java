@@ -37,7 +37,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         mainMenu(primaryStage);
     }
-    
+    //s
     public void mainMenu(Stage primaryStage) {
         //Display for openning game
         Text txtMenu = new Text("Ultimate Fighter:\nSHAGGY AT 0.01% POWER LEVEL VS SQUIDWARD EDITION");

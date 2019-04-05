@@ -61,23 +61,42 @@ public class Database {
         }return connection;
     }
 
-    // Method for displaying the entries in the table HighScores in our database
-    // Status: working
-    public void displayScore(){
-        String sql = "SELECT dmgDealt FROM HighScores";
+//    // Method for displaying the entries in the table HighScores in our database
+//    // Status: probably will not need
+//    public void displayScore(){
+//        String sql = "SELECT dmgDealt FROM HighScores";
+//
+//        try(Connection conn = this.connect();
+//            Statement statement = conn.createStatement();
+//            ResultSet result = statement.executeQuery(sql)){
+//
+//            while (result.next()){
+//                System.out.println("Current Highscore: "+result.getInt("dmgDealt"));
+//            }
+//        } catch (SQLException e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
 
+    // Use to display the top five highscores in our database, and prints to console.
+    // status: needs to be able to print in gui
+    public void displayTopFive(){
+        String sql = "SELECT * FROM HighScores ORDER BY dmgDealt DESC, null";
+        int i = 1;
         try(Connection conn = this.connect();
             Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(sql)){
-
+            System.out.println("[HIGHSCORES]");
             while (result.next()){
-                System.out.println("Current Highscore: "+result.getInt("dmgDealt"));
+                if (i<=5) {
+                    System.out.println("Rank " + i + ": " + result.getInt("dmgDealt"));
+                    i++;
+                }
             }
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
     }
-
     ////////// METHODS I MIGHT NEED FOR LATER? IDK YET.
 //    // This will display the coins from the table Currency, used as the database to store the coins.
 //    public void displayCoins(){
@@ -115,7 +134,7 @@ public class Database {
 
     // Status: working
     // A method that sums the total amount of coins earned from the game
-    public void displayTotal(){
+    public void displayTotalCoins(){
         String sql = "SELECT SUM(coins) FROM Currency";
         try(Connection conn = this.connect();
             Statement statement = conn.createStatement();
@@ -129,18 +148,6 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
-
-    // PROBABLY WON'T NEED SINCE 'displayTotal' seems to be working now.
-//    public void insertTotal(){
-//        String sql = "INSERT INTO TotalAmount (total) SELECT (SUM)coins FROM Currency";
-//
-//        try(Connection connection = this.connect();
-//            PreparedStatement pStatement = connection.prepareStatement(sql)){
-//            pStatement.executeUpdate();
-//        } catch (Exception e){
-//            System.out.println(e.getMessage());
-//        }
-//    }
 
     // Use to insert a new highscore.
     // Status: working
@@ -156,6 +163,7 @@ public class Database {
         }
     }
 
+    // Insert coins into our data (table: Currency).
     public void insertCoins(int coins){
         String insertSQL = "INSERT INTO Currency(coins) VALUES(?)";
 
@@ -204,11 +212,5 @@ public class Database {
         } catch (Exception e){
                 System.out.print(e.getMessage());
         }
-    }
-
-    // Test for inserting a new score while also deleting lowest scores and keeping
-    // the highest 5
-    public void topFiveScore(){
-
     }
 }

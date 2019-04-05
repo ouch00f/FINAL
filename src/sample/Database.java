@@ -64,23 +64,6 @@ public class Database {
         }return connection;
     }
 
-//    // Method for displaying the entries in the table HighScores in our database
-//    // Status: probably will not need
-//    public void displayScore(){
-//        String sql = "SELECT dmgDealt FROM HighScores";
-//
-//        try(Connection conn = this.connect();
-//            Statement statement = conn.createStatement();
-//            ResultSet result = statement.executeQuery(sql)){
-//
-//            while (result.next()){
-//                System.out.println("Current Highscore: "+result.getInt("dmgDealt"));
-//            }
-//        } catch (SQLException e){
-//            System.out.println(e.getMessage());
-//        }
-//    }
-
     // Use to display the top five highscores in our database, and prints to console.
     // status: needs to be able to print in gui
     public void displayTopFive(){
@@ -100,39 +83,6 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
-    ////////// METHODS I MIGHT NEED FOR LATER? IDK YET.
-//    // This will display the coins from the table Currency, used as the database to store the coins.
-//    public void displayCoins(){
-//        String sql = "SELECT coins FROM Currency";
-//        try(Connection conn = this.connect();
-//            Statement statement = conn.createStatement();
-//            ResultSet result = statement.executeQuery(sql)){
-//
-//            while (result.next()){
-//                System.out.println("Wallet: "+result.getInt("coins")+" coins.");
-//            }
-//        } catch (SQLException e){
-//            System.out.println(e.getMessage());
-//        }
-//    }
-
-//    // Status: working
-//    // A method that sums the total amount of coins earned from the game
-//    // edit: I MIGHT JUST REMOVE 'TOTAL' AND JUST SUM FROM COINS IN CURRENCY
-//    public void displayTotalCoins(){
-//        String sql = "SELECT SUM(total) FROM TotalAmount";
-//        try(Connection conn = this.connect();
-//            Statement statement = conn.createStatement();
-//            ResultSet result = statement.executeQuery(sql)){
-//            int index = 1;
-//            while (result.next()){
-//                int totalAmount = result.getInt(index);
-//                System.out.println("Wallet Total: "+totalAmount+" coins.");
-//            }
-//        } catch (SQLException e){
-//            System.out.println(e.getMessage());
-//        }
-//    }
 
 
     // Status: working
@@ -177,6 +127,14 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
+
+    // Use to call the method in database that will delete the amount of coins that the upgrade costs (20).
+    public void purchaseUpgrade(){
+        if (this.totalAmount >= 20){
+            decreaseCoins(20);
+        }
+    }
+
 
     public void deleteAllCoins(){
         String sqlDel = "DELETE FROM Currency";

@@ -230,4 +230,23 @@ public class Database {
                 System.out.print(e.getMessage());
         }
     }
+
+    // Gives this.totalAmount the coin value of the sum of coins in Currency table in database.
+    public int getCoins(){
+        String sql = "SELECT SUM(coins) FROM Currency";
+        try(Connection conn = this.connect();
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(sql)){
+            int index = 1;
+            while (result.next()){
+                int totalAmount = result.getInt(index);
+                System.out.println("Wallet Total: "+totalAmount+" coins.");
+            }
+            while (result.next()){
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return totalAmount;
+    }
 }

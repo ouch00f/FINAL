@@ -1,10 +1,17 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
@@ -27,8 +34,82 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        mainMenu(primaryStage);
+    }
+    // something
+
+    public void mainMenu(Stage primaryStage){
+        //Display for openning game
+        Text txtMenu = new Text("Ultimate Fighter:\nSHAGGY AT 0.01% POWER LEVEL VS SQUIDWARD EDITION");
+
+        txtMenu.setLayoutY(50);
+        txtMenu.setTextAlignment(TextAlignment.CENTER);
+        txtMenu.setLayoutX(170);
+        txtMenu.setFill(Color.DARKRED);
+        txtMenu.setFont(new Font("Georgia", 18));
+
+        double xAlignment = 40;
+
+        Button btnStandardGame = new Button("Standard Match");
+        btnStandardGame.setLayoutX(xAlignment);
+        btnStandardGame.setLayoutY(100);
+        btnStandardGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loadGame(primaryStage,"Standard Match");
+            }
+        });
 
 
+        Button btnTimedGame = new Button("Timed Match");
+        btnTimedGame.setLayoutY(150);
+        btnTimedGame.setLayoutX(xAlignment);
+        btnTimedGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loadGame(primaryStage,"Timed Match");
+            }
+        });
+
+        Button btnSpecial = new Button("0.02% Power Level");
+        btnSpecial.setLayoutX(xAlignment);
+        btnSpecial.setLayoutY(200);
+        btnSpecial.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loadGame(primaryStage,"Timed Match");
+            }
+        });
+
+        Button btnSettings = new Button("Settings");
+        btnSettings.setLayoutX(xAlignment);
+        btnSettings.setLayoutY(250);
+        btnSettings.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+
+        Group root = new Group();
+        root.getChildren().add(txtMenu);
+        root.getChildren().add(btnStandardGame);
+        root.getChildren().add(btnTimedGame);
+        root.getChildren().add(btnSettings);
+        root.getChildren().add(btnSpecial);
+
+        primaryStage.setScene(new Scene(root, 800, 450));
+        primaryStage.show();
+        //loadGame(primaryStage,"");
+    }
+
+    public void loadSettings(Stage stage){
+
+
+        stage.show();
+    }
+
+    public void loadGame(Stage primaryStage,String mode){
 
         Group root = new Group();
         primaryStage.setTitle("Shaggy VS Squidward");
@@ -37,9 +118,7 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
-        primaryStage.setOnHiding(event -> {
-            Runtime.getRuntime().exit(0);
-        });//Ends all processes of application on stage close
+        primaryStage.setOnHiding(event -> { Runtime.getRuntime().exit(0); });//Ends all processes of application on stage close
 
 
 
@@ -63,9 +142,7 @@ public class Main extends Application {
             checkConditions(SQUIDWARD);
         });
         timer.start();
-
     }
-
 
     public void keyPress(KeyCode keycode) {//when keys are pressed
 

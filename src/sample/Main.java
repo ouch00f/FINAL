@@ -1,22 +1,17 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.event.ActionEvent;
 
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 //import java.awt.*;
-import java.awt.*;
 import java.io.IOException;
-import java.sql.*;
 
 public class Main extends Application {
 
@@ -233,20 +228,22 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         // database instantiation
-        SQLite sql = new SQLite();
+        Database sql = new Database();
 
         // connects to db.
         sql.getConnection();
         // creates a table in db.
         sql.createTable();
-
-        sql.insertScore(200);
+        // inserts to database
+//        sql.insertScore(200);
         sql.insertCoins(5);
         // updates the highscore into the database.
-        sql.update(500);
+        //sql.updateScore(500);
         // displays db data.
+        //sql.deleteScore(100);
         sql.displayScore();
-        sql.displayCoins();
+        sql.displayTotal();
+        // starts program
         launch(args);
 
     }
@@ -254,25 +251,51 @@ public class Main extends Application {
     // Early testing for now, using the console.
     // With an end condition that will calculate score and winner.
     public void endCondition(){
+        Database scoreSQL = new Database();
 
         if (SHAGGY.health<=0){
             System.out.println("\nShaggy's Score: "+SHAGGY.score);
             System.out.println("Squidward's Score: "+SQUIDWARD.score+"\nSQUIDWARD WINS! by "+(SQUIDWARD.score-SHAGGY.score));
+            scoreSQL.insertScore(SQUIDWARD.score);
             SQUIDWARD.coins += 1;
 
             Menu menu = new Menu();
         } else if (SQUIDWARD.health<=0){
             System.out.println("\nSquidward's Score: "+SQUIDWARD.score);
             System.out.println("Shaggy's Score: "+SHAGGY.score+"\nSHAGGY WINS! by "+(SHAGGY.score-SQUIDWARD.score));
+            scoreSQL.insertScore(SHAGGY.score);
             SHAGGY.coins += 1;
             Menu menu = new Menu();
         }
     }
 
-    // Early upgrade method, not sure how i'm going to implement it atm.
-    public void upgradeCondition(){
-        if (SHAGGY.coins == 10 || SQUIDWARD.coins ==10){
-            // be able to purchase upgrade
+    // Early trials of inserting the higher score into the database
+    public static void conditionalInsertScore(int score1, int score2){
+        Database scoreSQL = new Database();
+        int winningScore;
+        if (score1>score2){
+            winningScore = score1;
+            scoreSQL.insertScore(winningScore);
+        } else if (score1<score2){
+            winningScore = score2;
+            scoreSQL.insertScore(winningScore);
+        } else if (score1==score2){
+            System.out.println("same score");
+        }
+    }
+
+    // Use to call the method in database that will delete the amount of coins that the upgrade costs (20).
+    public void purchaseUpgrade(int coins){
+        Database purchaseUpgrade = new Database();
+        // if coins is >=20 then upgrade is available
+        if (coins >= 20){
+            // decreases the coins in database by 20.
+            purchaseUpgrade.decreaseCoins(20);
+            if (SHAGGY.coins == coins){
+                SHAGGY.coins -= 20;
+            } else if (SQUIDWARD.coins == coins){
+                SQUIDWARD.coins -=20;
+            }
         }
     }
 }

@@ -1,11 +1,12 @@
 package sample;
 
 import javafx.application.Application;
+import org.sqlite.SQLiteDataSource;
 
 import java.sql.*;
 
 
-public class SQLite {
+public class Database {
 
 
     // The connection method to get the connection to and from our database
@@ -77,20 +78,69 @@ public class SQLite {
         }
     }
 
-    public void displayCoins(){
-        String sql = "SELECT coins FROM Currency";
+    ////////// METHODS I MIGHT NEED FOR LATER? IDK YET.
+//    // This will display the coins from the table Currency, used as the database to store the coins.
+//    public void displayCoins(){
+//        String sql = "SELECT coins FROM Currency";
+//        try(Connection conn = this.connect();
+//            Statement statement = conn.createStatement();
+//            ResultSet result = statement.executeQuery(sql)){
+//
+//            while (result.next()){
+//                System.out.println("Wallet: "+result.getInt("coins")+" coins.");
+//            }
+//        } catch (SQLException e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
 
+//    // Status: working
+//    // A method that sums the total amount of coins earned from the game
+//    // edit: I MIGHT JUST REMOVE 'TOTAL' AND JUST SUM FROM COINS IN CURRENCY
+//    public void displayTotalCoins(){
+//        String sql = "SELECT SUM(total) FROM TotalAmount";
+//        try(Connection conn = this.connect();
+//            Statement statement = conn.createStatement();
+//            ResultSet result = statement.executeQuery(sql)){
+//            int index = 1;
+//            while (result.next()){
+//                int totalAmount = result.getInt(index);
+//                System.out.println("Wallet Total: "+totalAmount+" coins.");
+//            }
+//        } catch (SQLException e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
+
+
+    // Status: working
+    // A method that sums the total amount of coins earned from the game
+    public void displayTotal(){
+        String sql = "SELECT SUM(coins) FROM Currency";
         try(Connection conn = this.connect();
             Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(sql)){
-
+            int index = 1;
             while (result.next()){
-                System.out.println("Currency: "+result.getInt("coins"));
+                int totalAmount = result.getInt(index);
+                System.out.println("Wallet Total: "+totalAmount+" coins.");
             }
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
     }
+
+    // PROBABLY WON'T NEED SINCE 'displayTotal' seems to be working now.
+//    public void insertTotal(){
+//        String sql = "INSERT INTO TotalAmount (total) SELECT (SUM)coins FROM Currency";
+//
+//        try(Connection connection = this.connect();
+//            PreparedStatement pStatement = connection.prepareStatement(sql)){
+//            pStatement.executeUpdate();
+//        } catch (Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
 
     // Use to insert a new highscore.
     // Status: working
@@ -120,7 +170,7 @@ public class SQLite {
 
     // This method will update the highscore by updating the entry when a new highscore is called
     // status: working
-    public void update (int newScore){
+    public void updateScore (int newScore){
         String sql = "UPDATE HighScores SET dmgDealt = ?";
         try(Connection connection = this.connect();
         PreparedStatement pstatement = connection.prepareStatement(sql)){
@@ -129,5 +179,36 @@ public class SQLite {
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
+    }
+
+    // Deletes entries equal to the parameter score
+    public void deleteScore(int score){
+        String delScore = "DELETE FROM HighScores WHERE dmgDealt = ?";
+        try(Connection connection = this.connect();
+            PreparedStatement statement = connection.prepareStatement(delScore)){
+                statement.setInt(1, score);
+                statement.executeUpdate();
+        } catch (Exception e){
+                System.out.println(e.getMessage());
+        }
+    }
+
+    // Use to decrease the amount that will cost for upgrading damage.
+    // Status: Need to take the SUM of all values in coins first
+    public void decreaseCoins(int coins){
+        String purchaseSQL = "DELETE FROM Currency WHERE dmgDealt = ?";
+        try(Connection connection = this.connect();
+            PreparedStatement statement = connection.prepareStatement(purchaseSQL)){
+                statement.setInt(1,coins);
+                statement.executeUpdate();
+        } catch (Exception e){
+                System.out.print(e.getMessage());
+        }
+    }
+
+    // Test for inserting a new score while also deleting lowest scores and keeping
+    // the highest 5
+    public void topFiveScore(){
+
     }
 }

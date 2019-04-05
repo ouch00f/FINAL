@@ -24,6 +24,5 @@ public class Squidward extends Character {
         blockingRight = new Image ("squidward_block_right.png");
         damagedLeft = new Image ("squidward_damaged_left.png");
         damagedRight = new Image ("squidward_damaged_right.png");
-
     }
 }

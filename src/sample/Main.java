@@ -190,7 +190,6 @@ public class Main extends Application {
         }
     }
 
-
     public void checkConditions(Character player) {//continuously checks conditions on the tick of a timer
 //        //////////////////////message
 //        if (SHAGGY.isTouching(SQUIDWARD)) {
@@ -236,8 +235,10 @@ public class Main extends Application {
         sql.createTable();
 
         // use for dummy trials atm
-        sql.insertCoins(5);
-
+        // sql.insertCoins(5);
+        // Used to update the total amount of coins after gaining more through the win clause into 1 single entry.
+        // can probable placed in end/winning condition method instead.
+        sql.updateTotalCoins();
         // Displays the top 5 highscores stored in database
         sql.displayTopFive();
         // Displays the total amount of coins in wallet from database.
@@ -256,16 +257,16 @@ public class Main extends Application {
             System.out.println("\nShaggy's Score: "+SHAGGY.score);
             System.out.println("Squidward's Score: "+SQUIDWARD.score+"\nSQUIDWARD WINS! by "+(SQUIDWARD.score-SHAGGY.score));
             endSQL.insertScore(SQUIDWARD.score);
-            SQUIDWARD.coins += 1;
             endSQL.insertCoins(1);
+            endSQL.updateTotalCoins();
 
             Menu menu = new Menu();
         } else if (SQUIDWARD.health<=0){
             System.out.println("\nSquidward's Score: "+SQUIDWARD.score);
             System.out.println("Shaggy's Score: "+SHAGGY.score+"\nSHAGGY WINS! by "+(SHAGGY.score-SQUIDWARD.score));
             endSQL.insertScore(SHAGGY.score);
-            SHAGGY.coins += 1;
             endSQL.insertCoins(1);
+            endSQL.updateTotalCoins();
             Menu menu = new Menu();
         }
     }

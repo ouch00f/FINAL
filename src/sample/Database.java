@@ -7,6 +7,9 @@ import java.sql.*;
 
 
 public class Database {
+    // Used for to store totalamount of coins, used in updateTotalCoins(), to store the SUM of
+    // coins in this variable to be called after deleting all entries before inserting back to db.
+    private int totalAmount;
 
 
     // The connection method to get the connection to and from our database
@@ -144,10 +147,47 @@ public class Database {
                 int totalAmount = result.getInt(index);
                 System.out.println("Wallet Total: "+totalAmount+" coins.");
             }
+            while (result.next()){
+            }
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
     }
+
+    // ***(alogrithm idea for total coins in 1 entry): for total coins, summing total amount, delete all entries then add back
+    // total amount.
+
+    public void updateTotalCoins(){
+        String sqlSum = "SELECT SUM(coins) FROM Currency";
+        try(Connection conn = this.connect();
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(sqlSum)){
+            int index = 1;
+            int totalAmount;
+            while (result.next()){
+                totalAmount = result.getInt(index);
+                //System.out.println("Wallet Total: "+totalAmount+" coins.");
+                this.totalAmount = totalAmount;
+            }
+            deleteAllCoins();
+            insertCoins(this.totalAmount);
+
+
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void deleteAllCoins(){
+        String sqlDel = "DELETE FROM Currency";
+        try(Connection connection = this.connect();
+            PreparedStatement statement = connection.prepareStatement(sqlDel)){
+            statement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     // Use to insert a new highscore.
     // Status: working

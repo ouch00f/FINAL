@@ -92,12 +92,22 @@ public class Main extends Application {
             }
         });
 
+        Button upgradeBtn = new Button ("Upgrade");
+        upgradeBtn.setLayoutX(xAlignment);
+        upgradeBtn.setLayoutY(300);
+        upgradeBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            }
+        });
+
         Group root = new Group();
         root.getChildren().add(txtMenu);
         root.getChildren().add(btnStandardGame);
         root.getChildren().add(btnTimedGame);
         root.getChildren().add(btnSettings);
         root.getChildren().add(btnSpecial);
+        root.getChildren().add(upgradeBtn);
 
         primaryStage.setScene(new Scene(root, 800, 450));
         primaryStage.show();
@@ -149,7 +159,6 @@ public class Main extends Application {
 
 
         switch (keycode) {
-
 
             // SHAGGY CONTROLS
             case D:
@@ -311,10 +320,6 @@ public class Main extends Application {
         sql.getConnection();
         // creates a table in db, if not already created.
         sql.createTable();
-
-        // use for dummy trials atm
-        // sql.insertCoins(5);
-        // Used to update the total amount of coins after gaining more through the win clause into 1 single entry.
         // can probable placed in end/winning condition method instead.
         sql.updateTotalCoins();
         // Displays the top 5 highscores stored in database
@@ -323,7 +328,6 @@ public class Main extends Application {
         sql.displayTotalCoins();
         // starts program
         launch(args);
-
     }
 
     // Early testing for now, using the console.
@@ -349,18 +353,11 @@ public class Main extends Application {
         }
     }
 
-    // Use to call the method in database that will delete the amount of coins that the upgrade costs (20).
-    public void purchaseUpgrade(int coins){
-        Database purchaseUpgrade = new Database();
-        // if coins is >=20 then upgrade is available
-        if (coins >= 20){
-            // decreases the coins in database by 20.
-            purchaseUpgrade.decreaseCoins(20);
-            if (SHAGGY.coins == coins){
-                SHAGGY.coins -= 20;
-            } else if (SQUIDWARD.coins == coins){
-                SQUIDWARD.coins -=20;
-            }
-        }
+    // upgrade method that will call a db method to check and decrease from database and set damage +10
+    public void upgrade(){
+        Database db = new Database();
+        db.purchaseUpgrade();
+        SHAGGY.damage += 10;
+        SQUIDWARD.damage += 10;
     }
 }

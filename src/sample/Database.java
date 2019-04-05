@@ -9,7 +9,7 @@ import java.sql.*;
 public class Database {
     // Used for to store totalamount of coins, used in updateTotalCoins(), to store the SUM of
     // coins in this variable to be called after deleting all entries before inserting back to db.
-    private int totalAmount;
+    public int totalAmount;
 
 
     // The connection method to get the connection to and from our database
@@ -116,7 +116,6 @@ public class Database {
             int totalAmount;
             while (result.next()){
                 totalAmount = result.getInt(index);
-                //System.out.println("Wallet Total: "+totalAmount+" coins.");
                 this.totalAmount = totalAmount;
             }
             deleteAllCoins();
@@ -128,10 +127,30 @@ public class Database {
         }
     }
 
-    // Use to call the method in database that will delete the amount of coins that the upgrade costs (20).
+    // This method will act as a purchasing upgrade method from the application to database,
+    // by checking if there's enough coins to allow for an upgrade to take place. If valid, this method will
+    // take the sum in coins and load it into one entry while deleting all other entries. Then it will decrease
+    // the coin amount in the database by 20, by calling deleteAllCoins, insertCoins (the total amount - 20 ) and update
+    // it to the database to save.
     public void purchaseUpgrade(){
-        if (this.totalAmount >= 20){
-            decreaseCoins(20);
+        String sqlSum = "SELECT SUM(coins) FROM Currency";
+        try(Connection conn = this.connect();
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(sqlSum)){
+            int index = 1;
+            int totalAmount;
+            while (result.next()){
+                totalAmount = result.getInt(index);
+                this.totalAmount = totalAmount;
+            }
+            System.out.println(this.totalAmount);
+            if (this.totalAmount >= 20){
+                deleteAllCoins();
+                insertCoins(this.totalAmount-20);
+                updateTotalCoins();
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
         }
     }
 

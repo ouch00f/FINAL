@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -38,7 +39,7 @@ public class Main extends Application {
     }
     // something
 
-    public void mainMenu(Stage primaryStage){
+    public void mainMenu(Stage primaryStage) {
         //Display for openning game
         Text txtMenu = new Text("Ultimate Fighter:\nSHAGGY AT 0.01% POWER LEVEL VS SQUIDWARD EDITION");
 
@@ -56,7 +57,7 @@ public class Main extends Application {
         btnStandardGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                loadGame(primaryStage,"Standard Match");
+                loadGame(primaryStage, "Standard Match");
             }
         });
 
@@ -68,7 +69,7 @@ public class Main extends Application {
         btnTimedGame.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                loadGame(primaryStage,"Timed Match");
+                loadGame(primaryStage, "Timed Match");
             }
         });
 
@@ -78,7 +79,7 @@ public class Main extends Application {
         btnSpecial.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                loadGame(primaryStage,"Timed Match");
+                loadGame(primaryStage, "Timed Match");
             }
         });
 
@@ -92,12 +93,19 @@ public class Main extends Application {
             }
         });
 
-        Button upgradeBtn = new Button ("Upgrade");
+        Button upgradeBtn = new Button("Upgrade");
         upgradeBtn.setLayoutX(xAlignment);
         upgradeBtn.setLayoutY(300);
         upgradeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Database sql = new Database();
+                sql.updateTotalCoins();
+                if (sql.totalAmount >= 20) {
+                    sql.purchaseUpgrade();
+                    SHAGGY.damage += 5;
+                    SQUIDWARD.damage += 5;
+                }
             }
         });
 
@@ -114,13 +122,26 @@ public class Main extends Application {
         //loadGame(primaryStage,"");
     }
 
-    public void loadSettings(Stage stage){
+    public void loadHelp(Stage stage){
+        Text txtHelp = new Text("Help:");
+        txtHelp.setLayoutY(75);
+        txtHelp.setLayoutX(100);
+        txtHelp.setFont(Font.font("Georgia", FontWeight.BOLD, 18));
 
+        Text txtInstruction = new Text("Basic Controls Shaggy:\nWAD to move\nC to attack\nS to block\n\nBasic Controls Squidward\nIJL to move\n");
 
+        Group root = new Group();
+        root.getChildren().add(txtHelp);
+
+        Scene scene = new Scene(root,800,450);
+        stage.setScene(scene);
         stage.show();
     }
 
-    public void loadGame(Stage primaryStage,String mode){
+
+
+
+    public void loadGame(Stage primaryStage, String mode) {
 
         Group root = new Group();
         primaryStage.setTitle("Shaggy VS Squidward");
@@ -129,8 +150,9 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
-        primaryStage.setOnHiding(event -> { Runtime.getRuntime().exit(0); });//Ends all processes of application on stage close
-
+        primaryStage.setOnHiding(event -> {
+            Runtime.getRuntime().exit(0);
+        });//Ends all processes of application on stage close
 
 
         // Adding object characters to scene.
@@ -169,10 +191,6 @@ public class Main extends Application {
                 break;
             case C:
                 SHAGGY.attack(SQUIDWARD, SHAGGY);
-                //SHAGGY.attack(SQUIDWARD, SHAGGY.getLayoutX(), SQUIDWARD.getLayoutX());
-                break;
-            case W:
-                SHAGGY.jumpVariable = SHAGGY.jumpVariable / 2;
                 break;
             case S:
                 SHAGGY.block();
@@ -191,10 +209,6 @@ public class Main extends Application {
             case P:
                 SQUIDWARD.attack(SHAGGY, SQUIDWARD);
                 break;
-            //SQUIDWARD.attack(SHAGGY,SQUIDWARD.getLayoutX(), SHAGGY.getLayoutX());
-            case I:
-                SQUIDWARD.jumpVariable = SQUIDWARD.jumpVariable / 2;
-                break;
             case K:
                 SQUIDWARD.block();
                 SQUIDWARD.setBlocking(true);
@@ -207,8 +221,6 @@ public class Main extends Application {
     }
 
     public void keyRelease(KeyCode keycode) {//when keys are released
-
-
 
 
         switch (keycode) {
@@ -330,34 +342,25 @@ public class Main extends Application {
         launch(args);
     }
 
-    // Early testing for now, using the console.
     // With an end condition that will calculate score and winner.
     public void endCondition(){
         Database endSQL = new Database();
 
         if (SHAGGY.health<=0){
-            System.out.println("\nShaggy's Score: "+SHAGGY.score);
-            System.out.println("Squidward's Score: "+SQUIDWARD.score+"\nSQUIDWARD WINS! by "+(SQUIDWARD.score-SHAGGY.score));
-            endSQL.insertScore(SQUIDWARD.score);
+            System.out.println("\nShaggy's Score: "+SHAGGY.getScore());
+            System.out.println("Squidward's Score: "+SQUIDWARD.getScore()+"\nSQUIDWARD WINS! by "+(SQUIDWARD.getScore()-SHAGGY.getScore()));
+            endSQL.insertScore(SQUIDWARD.getScore());
             endSQL.insertCoins(1);
             endSQL.updateTotalCoins();
 
             Menu menu = new Menu();
         } else if (SQUIDWARD.health<=0){
-            System.out.println("\nSquidward's Score: "+SQUIDWARD.score);
-            System.out.println("Shaggy's Score: "+SHAGGY.score+"\nSHAGGY WINS! by "+(SHAGGY.score-SQUIDWARD.score));
-            endSQL.insertScore(SHAGGY.score);
+            System.out.println("\nSquidward's Score: "+SQUIDWARD.getScore());
+            System.out.println("Shaggy's Score: "+SHAGGY.getScore()+"\nSHAGGY WINS! by "+(SHAGGY.getScore()-SQUIDWARD.getScore()));
+            endSQL.insertScore(SHAGGY.getScore());
             endSQL.insertCoins(1);
             endSQL.updateTotalCoins();
             Menu menu = new Menu();
         }
-    }
-
-    // upgrade method that will call a db method to check and decrease from database and set damage +10
-    public void upgrade(){
-        Database db = new Database();
-        db.purchaseUpgrade();
-        SHAGGY.damage += 10;
-        SQUIDWARD.damage += 10;
     }
 }

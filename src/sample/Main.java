@@ -239,10 +239,14 @@ public class Main extends Application {
         sql.getConnection();
         // creates a table in db.
         sql.createTable();
+
+        sql.insertScore(200);
+        sql.insertCoins(5);
         // updates the highscore into the database.
-        sql.update(400);
+        sql.update(500);
         // displays db data.
-        sql.displayDB();
+        sql.displayScore();
+        sql.displayCoins();
         launch(args);
 
     }
@@ -252,13 +256,13 @@ public class Main extends Application {
     public void endCondition(){
 
         if (SHAGGY.health<=0){
-            System.out.println("Shaggy's Score: "+SHAGGY.score);
+            System.out.println("\nShaggy's Score: "+SHAGGY.score);
             System.out.println("Squidward's Score: "+SQUIDWARD.score+"\nSQUIDWARD WINS! by "+(SQUIDWARD.score-SHAGGY.score));
             SQUIDWARD.coins += 1;
 
             Menu menu = new Menu();
         } else if (SQUIDWARD.health<=0){
-            System.out.println("Squidward's Score: "+SQUIDWARD.score);
+            System.out.println("\nSquidward's Score: "+SQUIDWARD.score);
             System.out.println("Shaggy's Score: "+SHAGGY.score+"\nSHAGGY WINS! by "+(SHAGGY.score-SQUIDWARD.score));
             SHAGGY.coins += 1;
             Menu menu = new Menu();
@@ -266,7 +270,7 @@ public class Main extends Application {
     }
 
     // Early upgrade method, not sure how i'm going to implement it atm.
-    public void upgrade(){
+    public void upgradeCondition(){
         if (SHAGGY.coins == 10 || SQUIDWARD.coins ==10){
             // be able to purchase upgrade
         }

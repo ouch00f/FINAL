@@ -36,11 +36,13 @@ public class SQLite {
     // Status: working
     public static void createTable(){
         String url = "jdbc:sqlite:ShaggyVsSquidward.db";
-        String tblSql = "CREATE TABLE IF NOT EXISTS HighScores(dmgDealt integer PRIMARY KEY)";
+        String tblSql = "CREATE TABLE IF NOT EXISTS HighScores(dmgDealt integer)";
+        String tblcoins = "CREATE TABLE IF NOT EXISTS Currency(coins integer)";
 
         try (Connection conn = DriverManager.getConnection(url);
              Statement statement = conn.createStatement()){
             statement.execute(tblSql);
+            statement.execute(tblcoins);
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
@@ -58,10 +60,9 @@ public class SQLite {
         }return connection;
     }
 
-
     // Method for displaying the entries in the table HighScores in our database
     // Status: working
-    public void displayDB(){
+    public void displayScore(){
         String sql = "SELECT dmgDealt FROM HighScores";
 
         try(Connection conn = this.connect();
@@ -69,8 +70,22 @@ public class SQLite {
             ResultSet result = statement.executeQuery(sql)){
 
             while (result.next()){
-
                 System.out.println("Current Highscore: "+result.getInt("dmgDealt"));
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void displayCoins(){
+        String sql = "SELECT coins FROM Currency";
+
+        try(Connection conn = this.connect();
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(sql)){
+
+            while (result.next()){
+                System.out.println("Currency: "+result.getInt("coins"));
             }
         } catch (SQLException e){
             System.out.println(e.getMessage());
@@ -79,12 +94,24 @@ public class SQLite {
 
     // Use to insert a new highscore.
     // Status: working
-    public void insert(int newScore){
+    public void insertScore(int newScore){
         String insertSQL = "INSERT INTO HighScores(dmgDealt) VALUES(?)";
 
         try(Connection connection = this.connect();
         PreparedStatement pStatement = connection.prepareStatement(insertSQL)){
             pStatement.setInt(1, newScore);
+            pStatement.executeUpdate();
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void insertCoins(int coins){
+        String insertSQL = "INSERT INTO Currency(coins) VALUES(?)";
+
+        try(Connection connection = this.connect();
+            PreparedStatement pStatement = connection.prepareStatement(insertSQL)){
+            pStatement.setInt(1, coins);
             pStatement.executeUpdate();
         } catch (Exception e){
             System.out.println(e.getMessage());

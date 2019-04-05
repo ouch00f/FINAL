@@ -1,22 +1,24 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.event.ActionEvent;
 
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 //import java.awt.*;
-import java.awt.*;
 import java.io.IOException;
-import java.sql.*;
 
 public class Main extends Application {
 
@@ -32,8 +34,79 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        mainMenu(primaryStage);
+    }
+    public void mainMenu(Stage primaryStage){
+        //Display for openning game
+        Text txtMenu = new Text("Ultimate Fighter:\nSHAGGY AT 0.01% POWER LEVEL VS SQUIDWARD EDITION");
+
+        txtMenu.setLayoutY(50);
+        txtMenu.setTextAlignment(TextAlignment.CENTER);
+        txtMenu.setLayoutX(170);
+        txtMenu.setFill(Color.DARKRED);
+        txtMenu.setFont(new Font("Georgia", 18));
+
+        double xAlignment = 40;
+
+        Button btnStandardGame = new Button("Standard Match");
+        btnStandardGame.setLayoutX(xAlignment);
+        btnStandardGame.setLayoutY(100);
+        btnStandardGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loadGame(primaryStage,"Standard Match");
+            }
+        });
+
+        Button btnTimedGame = new Button("Timed Match");
+        btnTimedGame.setLayoutY(150);
+        btnTimedGame.setLayoutX(xAlignment);
+        btnTimedGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loadGame(primaryStage,"Timed Match");
+            }
+        });
+
+        Button btnSpecial = new Button("0.02% Power Level");
+        btnSpecial.setLayoutX(xAlignment);
+        btnSpecial.setLayoutY(200);
+        btnSpecial.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                loadGame(primaryStage,"Timed Match");
+            }
+        });
+
+        Button btnSettings = new Button("Settings");
+        btnSettings.setLayoutX(xAlignment);
+        btnSettings.setLayoutY(250);
+        btnSettings.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+
+        Group root = new Group();
+        root.getChildren().add(txtMenu);
+        root.getChildren().add(btnStandardGame);
+        root.getChildren().add(btnTimedGame);
+        root.getChildren().add(btnSettings);
+        root.getChildren().add(btnSpecial);
+
+        primaryStage.setScene(new Scene(root, 800, 450));
+        primaryStage.show();
+        //loadGame(primaryStage,"");
+    }
+
+    public void loadSettings(Stage stage){
 
 
+        stage.show();
+    }
+
+    public void loadGame(Stage primaryStage,String mode){
 
         Group root = new Group();
         primaryStage.setTitle("Shaggy VS Squidward");
@@ -42,9 +115,7 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
-        primaryStage.setOnHiding(event -> {
-            Runtime.getRuntime().exit(0);
-        });//Ends all processes of application on stage close
+        primaryStage.setOnHiding(event -> { Runtime.getRuntime().exit(0); });//Ends all processes of application on stage close
 
 
 
@@ -68,9 +139,7 @@ public class Main extends Application {
             checkConditions(SQUIDWARD);
         });
         timer.start();
-
     }
-
 
     public void keyPress(KeyCode keycode) {//when keys are pressed
 
@@ -195,7 +264,6 @@ public class Main extends Application {
         }
     }
 
-
     public void checkConditions(Character player) {//continuously checks conditions on the tick of a timer
 //        //////////////////////message
 //        if (SHAGGY.isTouching(SQUIDWARD)) {
@@ -233,16 +301,23 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         // database instantiation
-        SQLite sql = new SQLite();
+        Database sql = new Database();
 
         // connects to db.
         sql.getConnection();
-        // creates a table in db.
+        // creates a table in db, if not already created.
         sql.createTable();
-        // updates the highscore into the database.
-        sql.update(400);
-        // displays db data.
-        sql.displayDB();
+
+        // use for dummy trials atm
+        // sql.insertCoins(5);
+        // Used to update the total amount of coins after gaining more through the win clause into 1 single entry.
+        // can probable placed in end/winning condition method instead.
+        sql.updateTotalCoins();
+        // Displays the top 5 highscores stored in database
+        sql.displayTopFive();
+        // Displays the total amount of coins in wallet from database.
+        sql.displayTotalCoins();
+        // starts program
         launch(args);
 
     }
@@ -250,14 +325,38 @@ public class Main extends Application {
     // Early testing for now, using the console.
     // With an end condition that will calculate score and winner.
     public void endCondition(){
+        Database endSQL = new Database();
+
         if (SHAGGY.health<=0){
-            System.out.println("Shaggy's Score: "+SHAGGY.score);
+            System.out.println("\nShaggy's Score: "+SHAGGY.score);
             System.out.println("Squidward's Score: "+SQUIDWARD.score+"\nSQUIDWARD WINS! by "+(SQUIDWARD.score-SHAGGY.score));
+            endSQL.insertScore(SQUIDWARD.score);
+            endSQL.insertCoins(1);
+            endSQL.updateTotalCoins();
+
             Menu menu = new Menu();
         } else if (SQUIDWARD.health<=0){
-            System.out.println("Squidward's Score: "+SQUIDWARD.score);
+            System.out.println("\nSquidward's Score: "+SQUIDWARD.score);
             System.out.println("Shaggy's Score: "+SHAGGY.score+"\nSHAGGY WINS! by "+(SHAGGY.score-SQUIDWARD.score));
+            endSQL.insertScore(SHAGGY.score);
+            endSQL.insertCoins(1);
+            endSQL.updateTotalCoins();
             Menu menu = new Menu();
         }
     }
+
+//    // Use to call the method in database that will delete the amount of coins that the upgrade costs (20).
+//    public void purchaseUpgrade(int coins){
+//        Database purchaseUpgrade = new Database();
+//        // if coins is >=20 then upgrade is available
+//        if (coins >= 20){
+//            // decreases the coins in database by 20.
+//            purchaseUpgrade.decreaseCoins(20);
+//            if (SHAGGY.coins == coins){
+//                SHAGGY.coins -= 20;
+//            } else if (SQUIDWARD.coins == coins){
+//                SQUIDWARD.coins -=20;
+//            }
+//        }
+//    }
 }

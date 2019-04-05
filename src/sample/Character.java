@@ -13,7 +13,7 @@ public abstract class Character extends HBox {
     protected boolean isBlocking, isFalling,isJumping, facingRight, isRunningRight, isRunningLeft;
     protected int health = 100;
     protected int damage = 10;
-    protected int dmgAmount;
+    protected int dmgAmount, coins;
     protected int atkRange = 5;
     protected int score = 0;
 
@@ -214,6 +214,10 @@ public abstract class Character extends HBox {
     public int getScore(){return this.score;}
 
     public void setScore(int score){ this.health = score;}
+
+    public int getCoins(){return this.coins;}
+
+    public void setCoins(int coins){ this.health = coins;}
 
 
 

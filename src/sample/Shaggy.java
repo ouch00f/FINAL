@@ -17,20 +17,18 @@ public class Shaggy extends Character {
 
         this.standRight();
 
-        standingRight = new javafx.scene.image.Image("shaggy_idle_right.png");
-        standingLeft = new javafx.scene.image.Image("shaggy_idle_left.png");
-        runningRight = new javafx.scene.image.Image("shaggy_move_right.png");
-        runningLeft = new javafx.scene.image.Image("shaggy_move_left.png");
-        jumpingLeft = new javafx.scene.image.Image("shaggy_jump_left.png");
-        jumpingRight = new javafx.scene.image.Image("shaggy_jump_right.png");
-        attackingLeft = new javafx.scene.image.Image("shaggy_attack_left.png");
+        standingRight = new Image("shaggy_idle_right.png");
+        standingLeft = new Image("shaggy_idle_left.png");
+        runningRight = new Image("shaggy_move_right.png");
+        runningLeft = new Image("shaggy_move_left.png");
+        jumpingLeft = new Image("shaggy_jump_left.png");
+        jumpingRight = new Image("shaggy_jump_right.png");
+        attackingLeft = new Image("shaggy_attack_left.png");
         attackingRight = new Image("shaggy_attack_right.png");
         blockingLeft = new Image("shaggy_block_left.png");
         blockingRight = new Image ("shaggy_block_right.png");
         damagedLeft = new Image ("shaggy_damaged_left.png");
         damagedRight = new Image ("shaggy_damaged_right.png");
-
-
     }
 
 }

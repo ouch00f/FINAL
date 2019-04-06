@@ -1,9 +1,11 @@
-/* Ultimate Fighter: Shaggy at 0.01% Power Level VS Squidward
+/* Ultimate Fighter: Shaggy at 0.05% Power Level VS Squidward
 Class Main: Bulk of program used for loading forms, and calculating game mechanics.
-Authors: Sandy Le, Devon Gulley*/
+Authors: Sandy Le, Devon Gulley.
+Last updated: April 5th, 2019.*/
 
 
 package sample;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,6 +13,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -21,6 +24,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import javax.swing.*;
 import java.io.IOException;
 
@@ -37,6 +42,8 @@ public class Main extends Application {
 
     }
 
+    // This stage is called upon whenever purchase button is activated.
+    // This stage will contain upgrade information along with the current coin balance in the database
     public void purchaseConfirm(Stage primaryStage){
 
         // Insantiation of the data object, used to retrieve data and use methods in the database class.
@@ -61,6 +68,19 @@ public class Main extends Application {
         wallet.setTextFill(Color.GREEN);
         wallet.setFont(new Font ("Georgia", 15));
         wallet.setVisible(true);
+
+        // Instantiation and settings for the back to main menu button if user decides not to
+        // purchase the upgrade, it will take you back to main menu on activation.
+        Button backBtn = new Button("Back to Main Menu");
+        backBtn.setLayoutX(20);
+        backBtn.setLayoutY(390);
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mainMenu(primaryStage);
+            }
+        });
+
 
 
         // Instantiation and settings for the button, this button will act as a purchase button and will apply the upgrade
@@ -95,6 +115,7 @@ public class Main extends Application {
         root.getChildren().add(purchaseInfo);
         root.getChildren().add(purchaseBtn);
         root.getChildren().add(wallet);
+        root.getChildren().add(backBtn);
         Scene scene = new Scene(root, 800, 450);
         primaryStage.setScene(scene);
         enableEscape(scene,primaryStage);
@@ -109,18 +130,23 @@ public class Main extends Application {
     /***************************************************************************
      * * Main Menu * *
      **************************************************************************/
+    // This is the main menu stage, it will at as the main homepage for our game.
+    // This is the core index of Shaggy vs Squidward and will contain various types of options.
     public void mainMenu(Stage primaryStage) {
         //Display for openning game-------------------------------------------------------------------------------------
-        Text txtMenu = new Text("Ultimate Fighter:\nSHAGGY AT 0.01% POWER LEVEL VS SQUIDWARD EDITION");
 
+        // Header for the main menu.
+        Text txtMenu = new Text("Ultimate Fighter:\nSHAGGY AT 0.05% POWER LEVEL VS SQUIDWARD EDITION");
         txtMenu.setLayoutY(50);
         txtMenu.setTextAlignment(TextAlignment.CENTER);
         txtMenu.setLayoutX(170);
         txtMenu.setFill(Color.DARKRED);
         txtMenu.setFont(new Font("Georgia", 18));
 
+        // variable to keep main menu buttons alinged.
         double xAlignment = 40;
 
+        // Instantiation and field of the standard fight option button
         Button btnStandardGame = new Button("Standard Match");
         btnStandardGame.setLayoutX(xAlignment);
         btnStandardGame.setLayoutY(100);
@@ -131,6 +157,7 @@ public class Main extends Application {
             }
         });
 
+        // Instantiation and field for the time based match.
         Button btnTimedGame = new Button("Timed Match");
         btnTimedGame.setLayoutY(150);
         btnTimedGame.setLayoutX(xAlignment);
@@ -138,19 +165,31 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 loadGame(primaryStage, "Timed Match");
+                PauseTransition delay = new PauseTransition(Duration.seconds(3));
+                delay.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        mainMenu(primaryStage);
+                    }
+                });
             }
         });
 
-        Button btnSpecial = new Button("0.02% Power Level");
+        // Instantiation and field of the game mode shaggy @ 0.10% Power Level, by increasing
+        // shaggy's damage x2.
+        Button btnSpecial = new Button("Shaggy @ 0.10% Power Level");
         btnSpecial.setLayoutX(xAlignment);
         btnSpecial.setLayoutY(200);
         btnSpecial.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                SHAGGY.damage *= 2;
                 loadGame(primaryStage, "Timed Match");
             }
         });
 
+        // Instantiation and field of the help button which will change scene and provide
+        // instructions on how to play the game.
         Button btnHelp = new Button("Help");
         btnHelp.setLayoutX(xAlignment);
         btnHelp.setLayoutY(250);
@@ -161,6 +200,8 @@ public class Main extends Application {
             }
         });
 
+        // Instantiation and field of the upgrade button. When activated it will open another stage
+        // that will have options for upgrading your damage.
         Button upgradeBtn = new Button("Upgrade");
         upgradeBtn.setLayoutX(xAlignment);
         upgradeBtn.setLayoutY(300);
@@ -172,6 +213,7 @@ public class Main extends Application {
             }
         });
 
+        // Adding the buttons,labels and text created for the main menu.
         Group root = new Group();
         root.getChildren().add(txtMenu);
         root.getChildren().add(btnStandardGame);
@@ -184,6 +226,8 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    // This method will be used to allow the key press of 'esc', it will be a shortcut to go back
+    // to the menu mid-fight.
     public void enableEscape(Scene scene,Stage stage){
         stage.getScene().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {//key press controls
             switch(keyEvent.getCode()){
@@ -196,6 +240,8 @@ public class Main extends Application {
     /***************************************************************************
      * * Help Menu * *
      **************************************************************************/
+    // This stage loads the tutorial/instructions stage that will have information on how to
+    // play the game.
     public void loadHelp(Stage stage){
         Text txtHelp = new Text("Help:");
         txtHelp.setLayoutY(75);
@@ -260,7 +306,7 @@ public class Main extends Application {
         });
 
         scene.addEventFilter(KeyEvent.KEY_RELEASED, keyEvent -> {//key press controls
-            this.keyRelease(keyEvent.getCode());
+            this.keyRelease(keyEvent.getCode(),primaryStage);
         });
 
         //All timing and motion tools
@@ -278,25 +324,48 @@ public class Main extends Application {
     /***************************************************************************
      * * Winning Screen * *
      **************************************************************************/
-    public void loadWinningScreen(Character winner){
+    // A winning screen that will prompt whenever a user wins, it will display the top score
+    // along with a image of the winner.
+    public void loadWinningScreen(Character winner, Stage primaryStage){
+        Database db = new Database();
+
+        // Instantiation and field of title.
         Text txtCongratulations = new Text("WHAT A GAME, BEHOLD THE GLORIOUS WINNER!");
-        txtCongratulations.setLayoutY(100);
-        txtCongratulations.setLayoutX(300);
-        txtCongratulations.setFont(Font.font("Georgia", FontWeight.BOLD, 30));
+        txtCongratulations.setLayoutY(50);
+        txtCongratulations.setLayoutX(25);
+        txtCongratulations.setFont(Font.font("Georgia", FontWeight.BOLD, 13));
 
-        Text txtHighScore = new Text("High score");
+        // Instantiation and field of a button that will allow to enter the main menu.
+        Button backBtn = new Button("Back to main menu");
+        backBtn.setLayoutX(20);
+        backBtn.setLayoutY(350);
+
+        // Instantiation and field of a text to highlight highscore.
+        Text highScore = new Text("Highscore:");
+        highScore.setLayoutY(80);
+        highScore.setLayoutX(100);
+        highScore.setFont(Font.font("Georgia", FontWeight.BOLD, 15));
+
+
+        // Instantiation and field of test for highscore printing from the database.
+        Text txtHighScore = new Text(db.displayRank1());
         txtHighScore.setLayoutY(100);
-        txtHighScore.setLayoutX(300);
-        txtHighScore.setFont(Font.font("Georgia", FontWeight.BOLD, 30));
+        txtHighScore.setLayoutX(100);
+        txtHighScore.setFont(Font.font("Georgia", FontWeight.BOLD, 15));
 
+        // // Instantiation and field of root of the winning screen
         Group root = new Group();
         root.getChildren().add(winner); //teleports the winner to this new screen
+        root.getChildren().add(txtCongratulations);
+        root.getChildren().add(txtHighScore);
+        root.getChildren().add(backBtn);
+        root.getChildren().add(highScore);
 
 
         Scene scene = new Scene(root,400,400);
         Stage stage = new Stage();
 
-        stage.setOnHiding(event -> {
+        stage.setOnHiding(event -> {//restarts the programs when the stage of this popup is hidden
                     this.mainMenu(stage);
                 });
 
@@ -304,6 +373,13 @@ public class Main extends Application {
         winner.setLayoutY(200);
         winner.setLayoutX(200);
         stage.show();
+        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                mainMenu(primaryStage);
+                stage.close();
+            }
+        });
     }
 
     /***************************************************************************
@@ -349,7 +425,7 @@ public class Main extends Application {
 
     }
 
-    public void keyRelease(KeyCode keycode) {//when keys are released
+    public void keyRelease(KeyCode keycode, Stage primaryStage) {//when keys are released
 
 
         switch (keycode) {
@@ -365,8 +441,8 @@ public class Main extends Application {
                 } else {
                     SHAGGY.standRight();
                 }
-                SHAGGY.setBlocking(false);
-                break;
+                SHAGGY.setBlocking(false); //SHAGGY is no longer blocking upon release of the block button
+                 break;
 
             case D:
                 SHAGGY.standRight();
@@ -382,7 +458,7 @@ public class Main extends Application {
                 } else {
                     SHAGGY.standRight();
                 }
-                endCondition();//for high score keeping
+                endCondition(primaryStage);//for high score keeping
                 break;
 
             // SQUIDWARD's controls when finger is lifted from key
@@ -405,7 +481,7 @@ public class Main extends Application {
                 } else {
                     SQUIDWARD.standRight();
                 }
-                SQUIDWARD.setBlocking(false);
+                SQUIDWARD.setBlocking(false);//SQUIDWARD is no longer blocking upon release of the block button
                 break;
 
             // Upon attacking, this key release will set the image for SQUIDWARD depending on where he faces
@@ -415,7 +491,7 @@ public class Main extends Application {
                 } else {
                     SQUIDWARD.standRight();
                 }
-                endCondition();//for high score keeping
+                endCondition(primaryStage);//for high score keeping
                 break;
         }
     }
@@ -478,25 +554,30 @@ public class Main extends Application {
     }
 
     // With an end condition that will calculate score and winner.
-    public void endCondition(){
+    public void endCondition(Stage primaryStage){
         Database endSQL = new Database();
 
-        if (SHAGGY.getHealth()<=0){
+        if (SHAGGY.getHealth()<=0){ //Events when SQUIDWARD wins the game
             System.out.println("\nShaggy's Score: "+SHAGGY.getScore());
             System.out.println("Squidward's Score: "+SQUIDWARD.getScore()+"\nSQUIDWARD WINS! by "+(SQUIDWARD.getScore()-SHAGGY.getScore()));
             endSQL.insertScore(SQUIDWARD.getScore());
             endSQL.insertCoins(1);
             endSQL.updateTotalCoins();
-            loadWinningScreen(SQUIDWARD);
+            loadWinningScreen(SQUIDWARD,primaryStage);
+            // This will reload the health allowing for a refresh when playing again, resetting health.
+            SHAGGY.setHealth(100);
+            SQUIDWARD.setHealth(100);
 
-        } else if (SQUIDWARD.getHealth()<=0){
+        } else if (SQUIDWARD.getHealth()<=0){//Events when SHAGGY wins the game
             System.out.println("\nSquidward's Score: "+SQUIDWARD.getScore());
             System.out.println("Shaggy's Score: "+SHAGGY.getScore()+"\nSHAGGY WINS! by "+(SHAGGY.getScore()-SQUIDWARD.getScore()));
             endSQL.insertScore(SHAGGY.getScore());
             endSQL.insertCoins(1);
             endSQL.updateTotalCoins();
-            loadWinningScreen(SHAGGY);
-
+            loadWinningScreen(SHAGGY, primaryStage);
+            // This will reload the health allowing for a refresh when playing again, resetting health.
+            SHAGGY.setHealth(100);
+            SQUIDWARD.setHealth(100);
         }
     }
 }

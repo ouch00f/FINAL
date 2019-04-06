@@ -12,48 +12,53 @@ public class Database {
     public int totalAmount;
 
 
-    // The connection method to get the connection to and from our database
-    // Status: working
+    // The connection method to get the connection to and from our database using the sql import and jdbc connection.
     public static void getConnection(){
+        // Setting connection to null initially for a close clause
         Connection conn = null;
         try {
-            //String url = "jdbc:sqlite:/Users/rain/Desktop/MASTER-final/ShaggyVsSquidward.db";
+            // The URL address for our database location
             String url = "jdbc:sqlite:ShaggyVsSquidward.db";
+            // Driver connects through taking the url parameter.
             conn = DriverManager.getConnection(url);
             System.out.println("Connection to database is established.");
+            // Will catch any exception/errors and print it off in console.
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }finally{
             // Closes database connection when problem is done to prevent memory leak.
             try{
+                // Close clause having connection not equal to null
                 if (conn != null){
                     conn.close();
                 }
+                // Catch for try&catch, will print any error message on console
             }catch(SQLException a){
                 System.out.println(a.getMessage());
             }
         }
     }
 
-    // Database: Create a table method
-    // This method will create a table into our database for our highscores.
-    // Status: working
+    // This method will connect to our database and create a table using a sql query line that will create the two tables
+    // as long as it does not exists
     public static void createTable(){
+        // SQL query code will function through the statement command
         String url = "jdbc:sqlite:ShaggyVsSquidward.db";
         String tblSql = "CREATE TABLE IF NOT EXISTS HighScores(dmgDealt integer)";
         String tblcoins = "CREATE TABLE IF NOT EXISTS Currency(coins integer)";
 
         try (Connection conn = DriverManager.getConnection(url);
              Statement statement = conn.createStatement()){
+            // executes the statement from the sql query string's
             statement.execute(tblSql);
             statement.execute(tblcoins);
         }catch (SQLException e){
+            // This will spit back an error if the method catches.
             System.out.println(e.getMessage());
         }
     }
 
-    // Connection connect method
-    // Status: working
+    // Connection that will connect to the database, this will be used in other methods to be able to reassure connection to the databases with this.connect();
     private Connection connect(){
         String url = "jdbc:sqlite:ShaggyVsSquidward.db";
         Connection connection = null;
@@ -64,19 +69,23 @@ public class Database {
         }return connection;
     }
 
-    // Use to display the top five highscores in our database, and prints to console.
-    // status: needs to be able to print in gui
+    // This method will display the top five ranked highscores in the table 'HighScores' under 'dmgDealt' entries.
+    // By using a sql query that will select all the entries in dmgDealt and printing them off
     public void displayTopFive(){
         String sql = "SELECT * FROM HighScores ORDER BY dmgDealt DESC, null";
-        int i = 1;
+        // Instantiation of an integer, this will be represented as the index for the dmgDealt entries.
+        int ranks = 1;
+        // Try & catch
         try(Connection conn = this.connect();
             Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(sql)){
             System.out.println("[HIGHSCORES]");
+            // This while loop will go until the end of results.
             while (result.next()){
-                if (i<=5) {
-                    System.out.println("Rank " + i + ": " + result.getInt("dmgDealt"));
-                    i++;
+                // This if statement will print off all the largest entries up to 5 entries.
+                if (ranks<=5) {
+                    System.out.println("Rank " + ranks + ": " + result.getInt("dmgDealt"));
+                    ranks++;
                 }
             }
         } catch (SQLException e){
@@ -85,8 +94,8 @@ public class Database {
     }
 
 
-    // Status: working
-    // A method that sums the total amount of coins earned from the game
+    // This method will display the total amount of 'coins' in the table 'Currency'. It will take all the entries and sum it, once the sum is taken it will store it into
+    // totalAmount and print off the sum.
     public void displayTotalCoins(){
         String sql = "SELECT SUM(coins) FROM Currency";
         try(Connection conn = this.connect();
@@ -104,9 +113,9 @@ public class Database {
         }
     }
 
-    // ***(alogrithm idea for total coins in 1 entry): for total coins, summing total amount, delete all entries then add back
-    // total amount.
-
+    // This method will update all the total coins by taking the sum of all coin entries in 'Currency' and store it into the variable 'totalAmount'. Once that's done it will call
+    // another sql method 'deleteAllCoins()' where it will delete all the multiple entries. Once the database is clear it will call one last method 'insertCoins()' using the parameter
+    // 'totalAmount' as the sum and insert that data into one entry in the database. (This will help reduce clutter in the database)
     public void updateTotalCoins(){
         String sqlSum = "SELECT SUM(coins) FROM Currency";
         try(Connection conn = this.connect();
@@ -154,7 +163,7 @@ public class Database {
         }
     }
 
-
+    // deleteAllCoins is a method that's called in 'updateTotalCoins()' where it will server to delete all the entries in Currency.
     public void deleteAllCoins(){
         String sqlDel = "DELETE FROM Currency";
         try(Connection connection = this.connect();
@@ -166,13 +175,14 @@ public class Database {
     }
 
 
-    // Use to insert a new highscore.
-    // Status: working
+    // This method will insert the newScore that the winning player achieves through one of the game modes and store it into the table 'HighScores' as 'dmgDealt'.
     public void insertScore(int newScore){
+        // SQL Query code that will insert the parameter into HighScores as dmgDealt.
         String insertSQL = "INSERT INTO HighScores(dmgDealt) VALUES(?)";
 
         try(Connection connection = this.connect();
-        PreparedStatement pStatement = connection.prepareStatement(insertSQL)){
+            PreparedStatement pStatement = connection.prepareStatement(insertSQL)){
+            // Puts in the parameter newScore and executes the update.
             pStatement.setInt(1, newScore);
             pStatement.executeUpdate();
         } catch (Exception e){
@@ -180,8 +190,9 @@ public class Database {
         }
     }
 
-    // Insert coins into our data (table: Currency).
+    // This method will insert the parameter value into 'coins' in the table 'Currency'. This method is called during the end of the game and adds an entry to the database.
     public void insertCoins(int coins){
+        // SQL Query code to insert the parameter value into Currency as coins.
         String insertSQL = "INSERT INTO Currency(coins) VALUES(?)";
 
         try(Connection connection = this.connect();

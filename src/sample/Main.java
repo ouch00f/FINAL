@@ -1,5 +1,9 @@
-package sample;
+/* Ultimate Fighter: Shaggy at 0.01% Power Level VS Squidward
+Class Main: Bulk of program used for loading forms, and calculating game mechanics.
+Authors: Sandy Le, Devon Gulley*/
 
+
+package sample;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -7,27 +11,26 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-
-
 import javax.swing.*;
-import javax.xml.crypto.Data;
-//import java.awt.*;
 import java.io.IOException;
 
 public class Main extends Application {
 
     // Character/object instantiation
-    int ground = 300;
+    int ground = 200;
     Squidward SQUIDWARD = new Squidward(675, ground);
     Shaggy SHAGGY = new Shaggy(25, ground);
+    Timer timer;
 
 
     public Main() throws IOException {
@@ -221,11 +224,22 @@ public class Main extends Application {
      **************************************************************************/
     public void loadGame(Stage primaryStage, String mode) {
 
-        Group root = new Group();
+        Pane root = new Pane();
         primaryStage.setTitle("Shaggy VS Squidward");
         Scene scene = new Scene(root, 800, 450);
 
+        String url = "background.png" ;
+        Image img = new Image(url);
+        BackgroundImage bgImg = new BackgroundImage(img,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false));
+        root.setBackground(new Background(bgImg));
+
+
+
         primaryStage.setResizable(false);
+
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setOnHiding(event -> {
@@ -238,6 +252,8 @@ public class Main extends Application {
         root.getChildren().add(SQUIDWARD);
 
 
+        enableEscape(scene,primaryStage);
+
         //Key event filters
         scene.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {//key press controls
             this.keyPress(keyEvent.getCode());
@@ -248,14 +264,47 @@ public class Main extends Application {
         });
 
         //All timing and motion tools
-        Timer timer = new Timer(45, e -> {
+        timer = new Timer(45, e -> {
             checkConditions(SHAGGY);
             checkConditions(SQUIDWARD);
         });
-        timer.start();
+        if(!timer.isRunning()) {
+            timer.start();
+        }
+        timer.setDelay(45);
 
     }
 
+    /***************************************************************************
+     * * Winning Screen * *
+     **************************************************************************/
+    public void loadWinningScreen(Character winner){
+        Text txtCongratulations = new Text("WHAT A GAME, BEHOLD THE GLORIOUS WINNER!");
+        txtCongratulations.setLayoutY(100);
+        txtCongratulations.setLayoutX(300);
+        txtCongratulations.setFont(Font.font("Georgia", FontWeight.BOLD, 30));
+
+        Text txtHighScore = new Text("High score");
+        txtHighScore.setLayoutY(100);
+        txtHighScore.setLayoutX(300);
+        txtHighScore.setFont(Font.font("Georgia", FontWeight.BOLD, 30));
+
+        Group root = new Group();
+        root.getChildren().add(winner); //teleports the winner to this new screen
+
+
+        Scene scene = new Scene(root,400,400);
+        Stage stage = new Stage();
+
+        stage.setOnHiding(event -> {
+                    this.mainMenu(stage);
+                });
+
+        stage.setScene(scene);
+        winner.setLayoutY(200);
+        winner.setLayoutX(200);
+        stage.show();
+    }
 
     /***************************************************************************
      * * Key Handling Functions * *
@@ -432,20 +481,21 @@ public class Main extends Application {
     public void endCondition(){
         Database endSQL = new Database();
 
-        if (SHAGGY.health<=0){
+        if (SHAGGY.getHealth()<=0){
             System.out.println("\nShaggy's Score: "+SHAGGY.getScore());
             System.out.println("Squidward's Score: "+SQUIDWARD.getScore()+"\nSQUIDWARD WINS! by "+(SQUIDWARD.getScore()-SHAGGY.getScore()));
             endSQL.insertScore(SQUIDWARD.getScore());
             endSQL.insertCoins(1);
             endSQL.updateTotalCoins();
+            loadWinningScreen(SQUIDWARD);
 
-
-        } else if (SQUIDWARD.health<=0){
+        } else if (SQUIDWARD.getHealth()<=0){
             System.out.println("\nSquidward's Score: "+SQUIDWARD.getScore());
             System.out.println("Shaggy's Score: "+SHAGGY.getScore()+"\nSHAGGY WINS! by "+(SHAGGY.getScore()-SQUIDWARD.getScore()));
             endSQL.insertScore(SHAGGY.getScore());
             endSQL.insertCoins(1);
             endSQL.updateTotalCoins();
+            loadWinningScreen(SHAGGY);
 
         }
     }

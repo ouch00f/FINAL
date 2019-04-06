@@ -1,5 +1,11 @@
-package sample;
+/*
+abstract class implementing java.scene.layout.HBox which is used to load a player onto the Main stage under loadGame
+Composed of java.scene.image.ImageView which is used for the visual display of the player
+*/
 
+
+
+package sample;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;

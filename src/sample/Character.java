@@ -7,21 +7,20 @@ import java.io.IOException;
 
 
 public abstract class Character extends HBox {
-    //Fields
-    protected double speed, jumpConstant, jumpVariable, fallConstant;
 
+    //Fields------------------------------------------------------------------------------------------------------------
+    protected double speed, jumpConstant, jumpVariable, fallConstant;
     protected boolean isBlocking, isFalling,isJumping, facingRight, isRunningRight, isRunningLeft;
     protected int health = 100;
     protected int damage = 10;
     protected int dmgAmount, coins;
     protected int atkRange = 5;
     protected int score = 0;
-
     protected Image standingRight, standingLeft, runningRight, runningLeft,jumpingRight,jumpingLeft, attackingLeft, attackingRight, blockingLeft, blockingRight, damagedLeft, damagedRight;
     protected Image currentImage;//place holder such that images are not loaded continuously: Currently being tested to see if it's faster than loading continuously
     ImageView characterImage;
 
-
+    //Constructor-------------------------------------------------------------------------------------------------------
     public Character(double initialX, double initialY,double startingSpeed,double startingJumpConstant) throws IOException {//Constructor
         this.setLayoutX(initialX);
         this.setLayoutY(initialY);
@@ -33,16 +32,30 @@ public abstract class Character extends HBox {
     }
 
 
-    //Image checking----------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
+    /***************************************************************************
+     * * Image Checking * *
+     **************************************************************************/
     public void setImage(Image image){
         characterImage.setImage(image);
     }
+    // Sets the displayed image of the Character to the parameter image
 
     public Image getCurrentImage(){return this.currentImage;}//The image that makes the character visible
+    //Returns the value of the Image currently being displayed on the Character
 
-    protected boolean differentImage(Image img){ return !(img == this.getCurrentImage()); }//true when characterImage is not the same as the parameter passed here
+    protected boolean differentImage(Image img){ return !(img == this.getCurrentImage()); }
+    //true when characterImage is not the same as the parameter passed here
 
-    //Horizontal motion-------------------------------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------------------------------------------------
+    /***************************************************************************
+     * * Horizontal Motion * *
+     **************************************************************************
+
+    The following methods set the character to the appropriate frame based on the direction she should be facing and
+     adjusts boolean fields to signify this change has happened.*/
+
     public void standRight(){
         this.facingRight = true;
         this.isRunningRight = false;
@@ -58,6 +71,7 @@ public abstract class Character extends HBox {
             }
         }
     }
+
 
     public void standLeft(){
         this.facingRight = false;
@@ -106,16 +120,23 @@ public abstract class Character extends HBox {
         this.facingRight = false;
     }
 
-    //Vertical motion---------------------------------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------------------------------------------------
+    /***************************************************************************
+     * * Vertical Motion * *
+     **************************************************************************/
+
     public void jump(){
         this.jumpVariable = this.jumpConstant;
         this.gravity();
     }
+    //Ensures that the player falls at the same speed after jumping as when she is simply falling
 
     public void fall(){
         this.setJumping(false);
         this.gravity();
     }
+    //Ensures that the player falls
 
     public void land(){
         this.jumpVariable = 0;
@@ -128,6 +149,7 @@ public abstract class Character extends HBox {
             this.standLeft();
         }
     }
+    //Adjusts landing animation based on the direction of the player while falling
 
     private void gravity(){
         this.setFalling(true);
@@ -137,24 +159,25 @@ public abstract class Character extends HBox {
             if(differentImage(jumpingRight)) {
                 this.setImage(jumpingRight);
             }
-            // not sure else if is needed, check later
         }else{
             if(differentImage(jumpingLeft)) {
                 this.setImage(jumpingLeft);
             }
         }
     }
+    /*Meant as a countinous call on a timer while a Character falls ensuring that the correct direction Image is loaded
+    and the value of the player's layoutY is correct*/
 
-
-
-
-
-    // [Attacks]--------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
+    /***************************************************************************
+     * * Combat Mechanics * *
+     **************************************************************************/
 
     public void attack(Character opponent, Character player){
-        if(this.isTouching(opponent) && opponent.isBlocking) {
+        this.setBlocking(false);
+        if(this.isTouching(opponent) && opponent.isBlocking()) {
             System.out.println("Attack Blocked!");
-        } else if(this.isTouching(opponent) && !opponent.isBlocking){
+        } else if(this.isTouching(opponent) && !opponent.isBlocking()){
             opponent.setHealth(opponent.getHealth() - this.damage);
             player.score += this.damage;
             // changes the opponent's character when damaged.
@@ -165,6 +188,7 @@ public abstract class Character extends HBox {
                 opponent.setImage(opponent.damagedLeft);
             }
         }
+        //Successful attacks are dealt to an opponent Character
 
         //loading the attack animation
         if (facingRight || isRunningRight) {
@@ -173,24 +197,30 @@ public abstract class Character extends HBox {
             this.setImage(attackingLeft);
         }
     }
-
-    public boolean isTouching( Character p2){//used to determine whether or not the characters are touching on the stage
-        return (Math.abs(this.getLayoutX() -p2.getLayoutX())* 2 < (this.getWidth() + p2.getWidth())) && (Math.abs(this.getLayoutY() - p2.getLayoutY())*2<(this.getHeight()+p2.getHeight()));
-    }
+    /*Loads attack animation and deals damage to an opponent: Character, who is not blocking and is in contact on
+    the stage*/
 
 
     public void block(){
+        this.setBlocking(true);
         if (facingRight || isRunningRight){
             this.setImage(blockingRight);
         } else if (!facingRight || isRunningLeft){
             this.setImage(blockingLeft);
         }
     }
+    //Loads appropriate blocking frame based on direction facing and sets the blocking value to true
+
+    public boolean isTouching( Character p2){//used to determine whether or not the characters are touching on the stage
+        return (Math.abs(this.getLayoutX() -p2.getLayoutX())* 2 < (this.getWidth() + p2.getWidth())) && (Math.abs(this.getLayoutY() - p2.getLayoutY())*2<(this.getHeight()+p2.getHeight()));
+    }
+    //Returns true when this Character and p2: Character, physically intersect the same space on the stage
 
 
-
-
-    //Accessors and mutators
+    //------------------------------------------------------------------------------------------------------------------
+    /***************************************************************************
+     * * Accessors and Mutators for getting and setting common fields * *
+     **************************************************************************/
     public void setFallConstant(double newFallConstant){this.fallConstant = newFallConstant;}
 
     public double getFallConstant(){return this.fallConstant;}
@@ -218,10 +248,6 @@ public abstract class Character extends HBox {
     public int getCoins(){return this.coins;}
 
     public void setCoins(int coins){ this.health = coins;}
-
-
-
-
 
     public void setFacingRight(boolean newFacingRight){ this.facingRight = newFacingRight; }
 

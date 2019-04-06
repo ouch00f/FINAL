@@ -92,7 +92,9 @@ public class Main extends Application {
         root.getChildren().add(purchaseInfo);
         root.getChildren().add(purchaseBtn);
         root.getChildren().add(wallet);
-        primaryStage.setScene(new Scene(root, 800, 450));
+        Scene scene = new Scene(root, 800, 450);
+        primaryStage.setScene(scene);
+        enableEscape(scene,primaryStage);
         primaryStage.show();
     }
 
@@ -100,10 +102,12 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         mainMenu(primaryStage);
     }
-    // something
 
+    /***************************************************************************
+     * * Main Menu * *
+     **************************************************************************/
     public void mainMenu(Stage primaryStage) {
-        //Display for openning game
+        //Display for openning game-------------------------------------------------------------------------------------
         Text txtMenu = new Text("Ultimate Fighter:\nSHAGGY AT 0.01% POWER LEVEL VS SQUIDWARD EDITION");
 
         txtMenu.setLayoutY(50);
@@ -123,8 +127,6 @@ public class Main extends Application {
                 loadGame(primaryStage, "Standard Match");
             }
         });
-
-        //test
 
         Button btnTimedGame = new Button("Timed Match");
         btnTimedGame.setLayoutY(150);
@@ -146,13 +148,13 @@ public class Main extends Application {
             }
         });
 
-        Button btnSettings = new Button("Settings");
-        btnSettings.setLayoutX(xAlignment);
-        btnSettings.setLayoutY(250);
-        btnSettings.setOnAction(new EventHandler<ActionEvent>() {
+        Button btnHelp = new Button("Help");
+        btnHelp.setLayoutX(xAlignment);
+        btnHelp.setLayoutY(250);
+        btnHelp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                loadHelp(primaryStage);
             }
         });
 
@@ -162,8 +164,6 @@ public class Main extends Application {
         upgradeBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-//                Database sql = new Database();
-//                sql.updateTotalCoins();
                 // Switches to purchase stage/menu.
                 purchaseConfirm(primaryStage);
             }
@@ -173,34 +173,52 @@ public class Main extends Application {
         root.getChildren().add(txtMenu);
         root.getChildren().add(btnStandardGame);
         root.getChildren().add(btnTimedGame);
-        root.getChildren().add(btnSettings);
+        root.getChildren().add(btnHelp);
         root.getChildren().add(btnSpecial);
         root.getChildren().add(upgradeBtn);
-
-        primaryStage.setScene(new Scene(root, 800, 450));
+        Scene scene = new Scene(root, 800, 450);
+        primaryStage.setScene(scene);
         primaryStage.show();
-        //loadGame(primaryStage,"");
     }
 
+    public void enableEscape(Scene scene,Stage stage){
+        stage.getScene().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {//key press controls
+            switch(keyEvent.getCode()){
+                case ESCAPE:
+                    this.mainMenu(stage);
+            }
+        });
+    }//allows a particular menu to escape to the main menu
+
+    /***************************************************************************
+     * * Help Menu * *
+     **************************************************************************/
     public void loadHelp(Stage stage){
         Text txtHelp = new Text("Help:");
         txtHelp.setLayoutY(75);
         txtHelp.setLayoutX(100);
         txtHelp.setFont(Font.font("Georgia", FontWeight.BOLD, 18));
 
-        Text txtInstruction = new Text("Basic Controls Shaggy:\nWAD to move\nC to attack\nS to block\n\nBasic Controls Squidward\nIJL to move\n");
-
+        Text txtInstruction = new Text("Basic Controls Shaggy:\nWAD to move\nC to attack\nS to block\n\n" +
+                "Basic Controls Squidward\nIJL to move\nP to attack\nK to block\n\n" +
+                "Press escape at any time to return to the main menu");
+        txtInstruction.setLayoutX(100);
+        txtInstruction.setLayoutY(100);
         Group root = new Group();
         root.getChildren().add(txtHelp);
+        root.getChildren().add(txtInstruction);
 
         Scene scene = new Scene(root,800,450);
         stage.setScene(scene);
+        enableEscape(scene,stage);
         stage.show();
     }
 
 
 
-
+    /***************************************************************************
+     * * Game Loaded: The Ultimate Fighting Stage * *
+     **************************************************************************/
     public void loadGame(Stage primaryStage, String mode) {
 
         Group root = new Group();
@@ -235,8 +253,13 @@ public class Main extends Application {
             checkConditions(SQUIDWARD);
         });
         timer.start();
+
     }
 
+
+    /***************************************************************************
+     * * Key Handling Functions * *
+     **************************************************************************/
     public void keyPress(KeyCode keycode) {//when keys are pressed
 
 
@@ -254,8 +277,6 @@ public class Main extends Application {
                 break;
             case S:
                 SHAGGY.block();
-                SHAGGY.setBlocking(true);
-
                 break;
 
 
@@ -271,7 +292,6 @@ public class Main extends Application {
                 break;
             case K:
                 SQUIDWARD.block();
-                SQUIDWARD.setBlocking(true);
                 break;
 
         }
@@ -284,12 +304,13 @@ public class Main extends Application {
 
 
         switch (keycode) {
-            // SHAGGY's
+            // SHAGGY's controls when finger is lifted from key
             case W:
                 SHAGGY.jump();
                 break;
 
             case S:
+                //Upon blocking, this key release will set the image for SHAGGY depending on where he faces
                 if (!SHAGGY.getFacingRight()) {
                     SHAGGY.standLeft();
                 } else {
@@ -306,16 +327,16 @@ public class Main extends Application {
                 break;
 
             case C:
-                // Upon attacking, this key release will set the image for shaggy position depending on where he faces.
+                // Upon attacking, this key release will set the image for SHAGGY depending on where he faces
                 if (SHAGGY.isRunningLeft || !SHAGGY.getFacingRight()) {
                     SHAGGY.standLeft();
                 } else {
                     SHAGGY.standRight();
                 }
-                endCondition();
+                endCondition();//for high score keeping
                 break;
 
-            // SQUIDWARD's
+            // SQUIDWARD's controls when finger is lifted from key
             case I:
                 SQUIDWARD.jump();
                 break;
@@ -329,6 +350,7 @@ public class Main extends Application {
                 break;
 
             case K:
+                //Upon blocking, this key release will set the image for SQUIDWARD depending on where he faces
                 if (!SQUIDWARD.getFacingRight()) {
                     SQUIDWARD.standLeft();
                 } else {
@@ -337,25 +359,24 @@ public class Main extends Application {
                 SQUIDWARD.setBlocking(false);
                 break;
 
-            // Upon attacking, this key release will set the image for squidward position depending on where he faces.
+            // Upon attacking, this key release will set the image for SQUIDWARD depending on where he faces
             case P:
                 if (SQUIDWARD.isRunningLeft() || !SQUIDWARD.getFacingRight()) {
                     SQUIDWARD.standLeft();
                 } else {
                     SQUIDWARD.standRight();
                 }
-                endCondition();
+                endCondition();//for high score keeping
                 break;
         }
     }
 
+
+    /***************************************************************************
+     * * Condition Checking/ Continuous Stage Updating * *
+     **************************************************************************/
     public void checkConditions(Character player) {//continuously checks conditions on the tick of a timer
-//        //////////////////////message
-//        if (SHAGGY.isTouching(SQUIDWARD)) {
-//            System.out.println("The characters are touching: " + SHAGGY.isTouching(SQUIDWARD));
-//        }
-
-
+        //Checking conditions to move a player along the x axis of the stage--------------------------------------------
         if (player.isRunningRight()) {
             player.setLayoutX(player.getLayoutX() + player.getSpeed());
         }
@@ -363,7 +384,8 @@ public class Main extends Application {
         if (player.isRunningLeft()) {
             player.setLayoutX(player.getLayoutX() - player.getSpeed());
         }
-
+        //--------------------------------------------------------------------------------------------------------------
+        //Checking conditions for falling/ landing, motion across the y axis of the stage-------------------------------
         if (player.getLayoutY() <= ground) {//when the player is falling
             //player.jump();
             player.fall();
@@ -373,17 +395,21 @@ public class Main extends Application {
                 player.land();
             }
         }
-
-        //boundaries of the stage and ensuring player does not exceed them
+        //--------------------------------------------------------------------------------------------------------------
+        //boundaries of the stage and ensuring player does not exceed them----------------------------------------------
         if (player.getLayoutX() > 750) {
             player.setLayoutX(750);
         }
         if (player.getLayoutX() < 0) {
             player.setLayoutX(0);
         }
-
+        //--------------------------------------------------------------------------------------------------------------
     }
 
+
+    /***************************************************************************
+     * * Database * *
+     **************************************************************************/
     public static void main(String[] args) {
         // database instantiation
         Database sql = new Database();
@@ -413,14 +439,14 @@ public class Main extends Application {
             endSQL.insertCoins(1);
             endSQL.updateTotalCoins();
 
-            Menu menu = new Menu();
+
         } else if (SQUIDWARD.health<=0){
             System.out.println("\nSquidward's Score: "+SQUIDWARD.getScore());
             System.out.println("Shaggy's Score: "+SHAGGY.getScore()+"\nSHAGGY WINS! by "+(SHAGGY.getScore()-SQUIDWARD.getScore()));
             endSQL.insertScore(SHAGGY.getScore());
             endSQL.insertCoins(1);
             endSQL.updateTotalCoins();
-            Menu menu = new Menu();
+
         }
     }
 }

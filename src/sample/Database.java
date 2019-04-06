@@ -93,6 +93,29 @@ public class Database {
         }
     }
 
+    // This method will display the top five ranked highscores in the table 'HighScores' under 'dmgDealt' entries.
+    // By using a sql query that will select all the entries in dmgDealt and printing them off
+    public String displayRank1(){
+        String sql = "SELECT * FROM HighScores ORDER BY dmgDealt DESC, null";
+        // Instantiation of an integer, this will be represented as the index for the dmgDealt entries.
+        int ranks = 1;
+        // Try & catch
+        try(Connection conn = this.connect();
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(sql)){
+            System.out.println("[HIGHSCORES]");
+            // This while loop will go until the end of results.
+            while (result.next()){
+                // This if statement will print off all the largest entries up to 5 entries.
+                if (ranks<=5) {
+                       return "Rank " + ranks + ": " + result.getInt("dmgDealt");
+                }
+            }
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        } return "done.";
+    }
+
 
     // This method will display the total amount of 'coins' in the table 'Currency'. It will take all the entries and sum it, once the sum is taken it will store it into
     // totalAmount and print off the sum.
